@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.*
+
+# Logs
+*.log
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+
+# Output and data
+output/
+
+# Ignore compiled files
+*.pkl
+*.h5
+*.db
+
+# Misc
+*.local
+*.sublime-workspace
+*.sublime-project

@@ -1,0 +1,5 @@
+[
+    {"id": "G1", "description": "Must include regulatory compliance check.",       "severity": "High",   "applicableSteps": ["generate_draft","map_risks"]},
+    {"id": "G2", "description": "People-impact decisions documented.",             "severity": "Medium", "applicableSteps": ["generate_mitigations"]},
+    {"id": "G3", "description": "All identified risks must have a mapped control.","severity": "High",   "applicableSteps": ["map_controls"]}
+]

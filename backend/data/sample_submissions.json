@@ -1,0 +1,74 @@
+[
+    {
+        "submissionId": "P100",
+        "draft": {
+            "project_summary": "AI Fraud Detection System for insurance claims, vendor-hosted ML engine, 24/7 availability.",
+            "identified_risks": ["Third-party/vendor risk", "Fraud/fraudulent claims", "System outage"]
+        },
+        "mapping": [
+            {"risk": "Third-party/vendor risk", "category": "Operational Risk", "subrisk": "Third-party/vendor risk", "confidence": 0.90},
+            {"risk": "Fraud/fraudulent claims", "category": "Operational Risk", "subrisk": "Fraud/fraudulent claims", "confidence": 0.88},
+            {"risk": "System outage", "category": "Operational Risk", "subrisk": "System outage", "confidence": 0.92}
+        ],
+        "controls": [
+            {"control_id": "C001", "name": "Vendor SLA Monitoring", "relevance_score": 0.90},
+            {"control_id": "C010", "name": "Fraud Detection Algorithms", "relevance_score": 0.88},
+            {"control_id": "C002", "name": "High-Availability Architecture", "relevance_score": 0.92}
+        ],
+        "mitigation": [
+            {"risk": "Third-party/vendor risk", "control_id": "C001", "mitigation_steps": ["Negotiate 99.9% SLA", "Set up alerting dashboard"]},
+            {"risk": "Fraud/fraudulent claims", "control_id": "C010", "mitigation_steps": ["Deploy anomaly detection model", "Weekly model retrain"]},
+            {"risk": "System outage", "control_id": "C002", "mitigation_steps": ["Implement geo-redundancy", "Quarterly failover tests"]}
+        ],
+        "issues": [
+            {"issue": "No SLA defined for ML vendor", "severity": "High", "recommendation": "Draft and sign SLA"},
+            {"issue": "Anomaly model drift not monitored", "severity": "Medium", "recommendation": "Setup drift-monitoring pipeline"}
+        ]
+    },
+    {
+        "submissionId": "P101",
+        "draft": {
+            "project_summary": "Digital Wallet for retail banking with instant payments and biometric login.",
+            "identified_risks": ["Regulatory non-compliance", "Data integrity breach"]
+        },
+        "mapping": [
+            {"risk": "Regulatory non-compliance", "category": "Compliance Risk", "subrisk": "Regulatory non-compliance", "confidence": 0.92},
+            {"risk": "Data integrity breach", "category": "Technology Risk", "subrisk": "Data integrity breach", "confidence": 0.89}
+        ],
+        "controls": [
+            {"control_id": "C003", "name": "Automated Data-Validation Rules", "relevance_score": 0.92},
+            {"control_id": "C005", "name": "AES-256 Encryption at Rest", "relevance_score": 0.89}
+        ],
+        "mitigation": [
+            {"risk": "Regulatory non-compliance", "control_id": "C003", "mitigation_steps": ["Embed validation rules", "Monthly compliance reviews"]},
+            {"risk": "Data integrity breach", "control_id": "C005", "mitigation_steps": ["Audit encryption settings", "Rotate keys"]}
+        ],
+        "issues": [
+            {"issue": "Missing validation for new fields", "severity": "High", "recommendation": "Update data-validation schema"},
+            {"issue": "Encryption key rotation overdue", "severity": "Medium", "recommendation": "Rotate keys immediately"}
+        ]
+    },
+    {
+        "submissionId": "P102",
+        "draft": {
+            "project_summary": "Blockchain Trade Finance platform with sanctions screening and audit trail.",
+            "identified_risks": ["Regulatory non-compliance", "Reputation damage"]
+        },
+        "mapping": [
+            {"risk": "Regulatory non-compliance", "category": "Compliance Risk", "subrisk": "Regulatory non-compliance", "confidence": 0.90},
+            {"risk": "Reputation damage", "category": "Strategic Risk", "subrisk": "Reputation damage", "confidence": 0.85}
+        ],
+        "controls": [
+            {"control_id": "C017", "name": "Regulatory Mapping Database", "relevance_score": 0.90},
+            {"control_id": "C011", "name": "Governance Committee Oversight", "relevance_score": 0.85}
+        ],
+        "mitigation": [
+            {"risk": "Regulatory non-compliance", "control_id": "C017", "mitigation_steps": ["Update mapping DB", "Automate compliance checks"]},
+            {"risk": "Reputation damage", "control_id": "C011", "mitigation_steps": ["Schedule committee reviews", "Prepare communication plan"]}
+        ],
+        "issues": [
+            {"issue": "Outdated regulatory mapping document", "severity": "High", "recommendation": "Refresh mapping database"},
+            {"issue": "Review cycle not documented", "severity": "Low", "recommendation": "Document committee schedules"}
+        ]
+    }
+]

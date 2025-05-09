@@ -1,0 +1,22 @@
+[
+    {"id": "R1", "category": "Operational Risk",    "subrisk": "Process failure"},
+    {"id": "R2", "category": "Operational Risk",    "subrisk": "Third-party/vendor risk"},
+    {"id": "R3", "category": "Operational Risk",    "subrisk": "System outage"},
+    {"id": "R19", "category": "Operational Risk",   "subrisk": "Fraud/fraudulent claims"},
+    {"id": "R4", "category": "Compliance Risk",     "subrisk": "Regulatory non-compliance"},
+    {"id": "R5", "category": "Compliance Risk",     "subrisk": "Reporting errors"},
+    {"id": "R6", "category": "Credit Risk",         "subrisk": "Counterparty default"},
+    {"id": "R7", "category": "Credit Risk",         "subrisk": "Concentration exposure"},
+    {"id": "R8", "category": "Market Risk",         "subrisk": "Interest-rate shifts"},
+    {"id": "R9", "category": "Market Risk",         "subrisk": "FX rate volatility"},
+    {"id": "R10","category": "Liquidity Risk",      "subrisk": "Cash-flow mismatch"},
+    {"id": "R11","category": "Technology Risk",     "subrisk": "Cyberattack"},
+    {"id": "R12","category": "Technology Risk",     "subrisk": "Data integrity breach"},
+    {"id": "R20","category": "Technology Risk",     "subrisk": "Third-party API vulnerability"},
+    {"id": "R13","category": "Strategic Risk",      "subrisk": "New product misalignment"},
+    {"id": "R14","category": "Strategic Risk",      "subrisk": "Reputation damage"},
+    {"id": "R15","category": "Reputational Risk",   "subrisk": "Media backlash"},
+    {"id": "R16","category": "Conduct Risk",        "subrisk": "Insider trading"},
+    {"id": "R17","category": "ESG Risk",            "subrisk": "Environmental non-compliance"},
+    {"id": "R18","category": "ESG Risk",            "subrisk": "Social responsibility lapse"}
+]

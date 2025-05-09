@@ -1,0 +1,22 @@
+[
+    {"id": "C001", "name": "Vendor SLA Monitoring",            "description": "Automated alerts if SLA missed >1h; monthly SLA reviews.",              "subriskIds": ["R2","R20"]},
+    {"id": "C002", "name": "High-Availability Architecture",   "description": "Geo-redundant deployment; quarterly failover drills.",             "subriskIds": ["R3"]},
+    {"id": "C003", "name": "Automated Data-Validation Rules",  "description": "Schema checks against regulatory templates pre-submission.",  "subriskIds": ["R4","R5"]},
+    {"id": "C004", "name": "MFA Enforcement",                  "description": "Enforce MFA for all user actions; annual penetration tests.",       "subriskIds": ["R11"]},
+    {"id": "C005", "name": "AES-256 Encryption at Rest",       "description": "Encrypt all PII with AES-256; key rotation every 90 days.",   "subriskIds": ["R12"]},
+    {"id": "C006", "name": "Credit-Limit Monitoring",         "description": "Real-time checks against counterparty limits; alerts at 80%.",   "subriskIds": ["R6","R7"]},
+    {"id": "C007", "name": "Liquidity Stress-Test",            "description": "Monthly Monte-Carlo cash-flow simulations under stress.",        "subriskIds": ["R10"]},
+    {"id": "C008", "name": "Regulatory Training Program",      "description": "Quarterly compliance workshops; mandatory certification.",       "subriskIds": ["R4"]},
+    {"id": "C009", "name": "Incident Response Plan",           "description": "Documented IR procedures; semi-annual tabletop exercises.",    "subriskIds": ["R3","R11"]},
+    {"id": "C010", "name": "Fraud Detection Algorithms",       "description": "ML-based anomaly detection on claims; daily model retrain.",     "subriskIds": ["R19"]},
+    {"id": "C011", "name": "Governance Committee Oversight",   "description": "Monthly risk-committee review of new initiatives.",            "subriskIds": ["R13","R14"]},
+    {"id": "C012", "name": "API Security Gateway",             "description": "API Gateway with WAF, rate limiting, OWASP rules.",            "subriskIds": ["R20"]},
+    {"id": "C013", "name": "Media Monitoring Service",         "description": "24/7 brand-mention alerts; escalation workflows.",                "subriskIds": ["R15","R14"]},
+    {"id": "C014", "name": "ESG Audit Framework",              "description": "Annual third-party ESG audit; actionable follow-up.",           "subriskIds": ["R17","R18"]},
+    {"id": "C015", "name": "Business Continuity Plan (BCP)",   "description": "Comprehensive BCP with RTO/RPO targets; semi-annual drills.",  "subriskIds": ["R3","R10"]},
+    {"id": "C016", "name": "Insider Trading Monitoring",       "description": "Real-time trade surveillance with alert triggers.",              "subriskIds": ["R16"]},
+    {"id": "C017", "name": "Regulatory Mapping Database",      "description": "Updated map of product requirements per jurisdiction.",       "subriskIds": ["R4","R5"]},
+    {"id": "C018", "name": "Change Management Process",        "description": "Formal change requests, approvals, rollback guidelines.",       "subriskIds": ["R1","R3"]},
+    {"id": "C019", "name": "Third-Party Security Assessments", "description": "Annual pentests & compliance attestations from vendors.",    "subriskIds": ["R2","R11","R20"]},
+    {"id": "C020", "name": "Stakeholder Communication Plan",   "description": "Regular executive & regulator updates.",                   "subriskIds": ["R4","R14","R15"]}
+]
