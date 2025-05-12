@@ -27,9 +27,12 @@ export default function WorkflowProgress({ steps, currentStep, workflowStatus, o
   // Get the completed steps
   const completedSteps = new Set(mainSteps.map((s) => s.step))
 
-  // Check if the workflow is rejected
+  // Check if the workflow is rejected (handle both possible structures)
   const isRejected = mainSteps.some(
-    (s) => s.step === "evaluate_decision" && s.output?.decision_result?.decision === "Rejected",
+    (s) =>
+      s.step === "evaluate_decision" &&
+      (s.output?.decision_result?.decision === "Rejected" ||
+        s.output?.decision === "Rejected")
   )
 
   return (
