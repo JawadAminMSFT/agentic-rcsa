@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache"
 import { startWorkflow as apiStartWorkflow, submitWorkflowFeedback } from "./api-client"
 
-export async function createWorkflow(projectDescription: string): Promise<string> {
+export async function createWorkflow(projectDescription: string, file?: File | null): Promise<string> {
   try {
-    const response = await apiStartWorkflow(projectDescription)
+    const response = await apiStartWorkflow(projectDescription, file)
     return response.context_id
   } catch (error) {
     console.error("Error creating workflow:", error)

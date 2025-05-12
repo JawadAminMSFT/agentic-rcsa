@@ -233,11 +233,12 @@ draft_agent = Agent[WorkflowContext](
 mapping_agent = Agent[WorkflowContext](
     name="mapping_agent",
     instructions=(
-        "Depending on the project draft submission, identify key risks and return the risks and subrisks."
+        "Given the project draft submission, identify and list key risks. "
         "ONLY return a JSON array of objects, each with: "
-        '{"risk": str, "category": str, "subrisk": str, "confidence": float}" '
+        '{"risk": str, "category": str, "subrisk": str, "confidence": float}"'
         "Example: "
         '[{"risk": "System outage", "category": "Operational Risk", "subrisk": "System outage", "confidence": 0.92}]'
+        "Do NOT return the draft submission, project description, or any other data. Do NOT echo the input. The output must be a JSON array of risk objects only."
     ),
     model=OpenAIChatCompletionsModel(
         model=azure_deployment,
@@ -298,6 +299,7 @@ decision_agent = Agent[WorkflowContext](
         '{"decision": "Approved"|"Rejected", "rationale": str}'
         "Example: "
         '{"decision": "Approved", "rationale": "All controls are mapped and no critical issues remain."}'
+        "Do NOT nest the decision_result inside any other object. The output must be a flat JSON object with only 'decision' and 'rationale' at the top level."
     ),
     model=OpenAIChatCompletionsModel(
                 model=azure_deployment,

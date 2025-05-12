@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Path, Query, Body
+from fastapi import FastAPI, HTTPException, Path, Query, Body, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
@@ -6,6 +6,8 @@ import os
 import json
 import uuid
 import asyncio
+import shutil
+from pypdf import PdfReader
 from agentic_rcsa import (
     run_risk_workflow, WorkflowContext, save_context, load_context,
     DATA_DIR, RISK_CATALOG, CONTROLS_CATALOG, GUARDRAIL_RULES, SAMPLE_SUBMISSIONS,
@@ -67,13 +69,57 @@ def _save_json(path, data):
 # --- Workflow Endpoints ---
 @app.post('/workflow/start')
 async def start_workflow(
-    project_description: str = Body(...),
+    project_description: Optional[str] = Form(None),
+    file: UploadFile = File(None),
     context_id: Optional[str] = Query(None)
 ):
+    # Accept project_description from either Form (multipart) or Body (JSON)
+    if project_description is None:
+        try:
+            # Try to get from JSON body
+            from fastapi import Request
+            import inspect
+            frame = inspect.currentframe()
+            request = None
+            while frame:
+                if 'request' in frame.f_locals:
+                    request = frame.f_locals['request']
+                    break
+                frame = frame.f_back
+            if request is not None:
+                data = await request.json()
+                project_description = data.get('project_description')
+        except Exception:
+            project_description = None
+    if not project_description:
+        raise HTTPException(status_code=400, detail="project_description is required (as form or JSON body)")
+    # Handle file upload and PDF extraction
+    uploads_dir = os.path.join(os.path.dirname(__file__), 'uploads')
+    os.makedirs(uploads_dir, exist_ok=True)
+    file_content = ''
+    file_path = None
+    if file is not None:
+        file_path = os.path.join(uploads_dir, f"{uuid.uuid4()}_{file.filename}")
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        # Only extract text if PDF
+        if file.filename.lower().endswith('.pdf'):
+            try:
+                reader = PdfReader(file_path)
+                file_content = "\n".join(page.extract_text() or '' for page in reader.pages)
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Failed to extract PDF text: {e}")
+        else:
+            # For non-PDFs, just note the file was uploaded
+            file_content = f"[File '{file.filename}' uploaded, not a PDF]"
+    # Combine project description and file content
+    combined_description = project_description
+    if file_content:
+        combined_description += f"\n\n[File Content:]\n{file_content}"
     if not context_id:
         context_id = str(uuid.uuid4())
-    asyncio.create_task(run_risk_workflow(project_description, context_id))
-    return {"context_id": context_id, "status": "started"}
+    asyncio.create_task(run_risk_workflow(combined_description, context_id))
+    return {"context_id": context_id, "status": "started", "file_saved": bool(file_path), "file_path": file_path}
 
 @app.get('/workflow/{context_id}')
 def get_workflow(context_id: str = Path(...)):
