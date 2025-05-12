@@ -6,13 +6,32 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const url = `${API_BASE_URL}${endpoint}`
 
+  // Normalize headers to a plain object
+  let headers: Record<string, string> = {}
+  if (options.headers instanceof Headers) {
+    options.headers.forEach((value, key) => {
+      headers[key] = value
+    })
+  } else if (Array.isArray(options.headers)) {
+    options.headers.forEach(([key, value]) => {
+      headers[key] = value
+    })
+  } else if (typeof options.headers === "object" && options.headers !== null) {
+    headers = { ...options.headers } as Record<string, string>
+  }
+
+  if (options.body instanceof FormData) {
+    delete headers["Content-Type"]
+  } else {
+    headers["Content-Type"] = "application/json"
+  }
+
   try {
     const response = await fetch(url, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        ...headers,
         "Cache-Control": "no-cache",
-        ...options.headers,
       },
     })
 
@@ -29,11 +48,23 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 }
 
 // Workflow API calls
-export async function startWorkflow(projectDescription: string) {
-  return fetchAPI("/workflow/start", {
-    method: "POST",
-    body: JSON.stringify(projectDescription),
-  })
+export async function startWorkflow(projectDescription: string, file?: File | null) {
+  if (file) {
+    const formData = new FormData()
+    formData.append("project_description", projectDescription)
+    formData.append("file", file)
+    return fetchAPI("/workflow/start", {
+      method: "POST",
+      body: formData,
+      // Don't set Content-Type header; browser will set it for multipart
+      headers: { "Cache-Control": "no-cache" },
+    })
+  } else {
+    return fetchAPI("/workflow/start", {
+      method: "POST",
+      body: JSON.stringify({ project_description: projectDescription }),
+    })
+  }
 }
 
 export async function getWorkflow(contextId: string) {

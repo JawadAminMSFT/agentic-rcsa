@@ -34,6 +34,7 @@ Thumbs.db
 
 # Output and data
 output/
+uploads/
 
 # Ignore compiled files
 *.pkl
