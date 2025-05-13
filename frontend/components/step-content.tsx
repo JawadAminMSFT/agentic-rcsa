@@ -316,11 +316,14 @@ function IssuesContent({
   setViewMode: (mode: "formatted" | "raw") => void
 }) {
   const parsedData = safeParse(data)
-  const issues = Array.isArray(parsedData?.issues_list)
-    ? parsedData.issues_list
-    : parsedData?.issues_list
-      ? [parsedData.issues_list]
-      : []
+  // Support both root-level array and issues_list property
+  const issues = Array.isArray(parsedData)
+    ? parsedData
+    : Array.isArray(parsedData?.issues_list)
+      ? parsedData.issues_list
+      : parsedData?.issues_list
+        ? [parsedData.issues_list]
+        : []
 
   return (
     <div className="space-y-4">
@@ -366,8 +369,8 @@ function DecisionContent({
   setViewMode: (mode: "formatted" | "raw") => void
 }) {
   const parsedData = safeParse(data)
-  // Use parsedData directly, as the decision object is at the root
-  const decision = parsedData
+  // Support both root-level and decision_result-wrapped decision objects
+  const decisionObj = parsedData?.decision_result || parsedData
 
   return (
     <div className="space-y-4">
@@ -379,7 +382,7 @@ function DecisionContent({
         <Card>
           <CardContent className="p-6">
             <div className="flex flex-col items-center text-center mb-4">
-              {decision.decision?.toLowerCase() === "approved" ? (
+              {decisionObj.decision?.toLowerCase() === "approved" ? (
                 <>
                   <CheckCircle className="h-12 w-12 text-green-500 mb-2" />
                   <h3 className="text-xl font-bold text-green-500">Approved</h3>
@@ -394,7 +397,7 @@ function DecisionContent({
 
             <div className="mt-4">
               <h4 className="text-md font-semibold mb-2">Rationale</h4>
-              <p>{decision.rationale}</p>
+              <p>{decisionObj.rationale}</p>
             </div>
           </CardContent>
         </Card>
