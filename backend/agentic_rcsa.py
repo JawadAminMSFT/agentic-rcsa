@@ -128,11 +128,16 @@ def save_context(context, path):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(context.to_dict(), f, indent=2)
 
-# Update load_context to pass timestamps if present
+# Update load_context to ignore unknown fields
+from dataclasses import fields as dataclass_fields
+
 def load_context(path):
     with open(path, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    return WorkflowContext(**data)
+    # Only keep keys that are fields in WorkflowContext
+    allowed = {f.name for f in dataclass_fields(WorkflowContext)}
+    filtered = {k: v for k, v in data.items() if k in allowed}
+    return WorkflowContext(**filtered)
 
 # --- Load Data from JSON Files ---
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Path, Query, Body, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, Path, Query, Body, UploadFile, File, Form, Depends, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
@@ -57,6 +57,9 @@ class FeedbackRequest(BaseModel):
     step: str
     feedback: str
 
+class ProjectDescriptionBody(BaseModel):
+    project_description: str
+
 # --- Helper functions for file CRUD ---
 def _load_json(path):
     with open(path, 'r', encoding='utf-8') as f:
@@ -67,33 +70,33 @@ def _save_json(path, data):
         json.dump(data, f, indent=2)
 
 # --- Workflow Endpoints ---
-@app.post('/workflow/start')
-async def start_workflow(
+async def get_project_description(
     project_description: Optional[str] = Form(None),
     file: UploadFile = File(None),
-    context_id: Optional[str] = Query(None)
-):
-    # Accept project_description from either Form (multipart) or Body (JSON)
-    if project_description is None:
+    request: Request = None
+) -> dict:
+    """
+    Dependency to get project_description from either form or JSON body.
+    Returns dict with keys: project_description, file
+    """
+    if project_description is not None:
+        return {"project_description": project_description, "file": file}
+    if request is not None:
         try:
-            # Try to get from JSON body
-            from fastapi import Request
-            import inspect
-            frame = inspect.currentframe()
-            request = None
-            while frame:
-                if 'request' in frame.f_locals:
-                    request = frame.f_locals['request']
-                    break
-                frame = frame.f_back
-            if request is not None:
-                data = await request.json()
-                project_description = data.get('project_description')
+            data = await request.json()
+            pd = data.get("project_description")
+            if pd:
+                return {"project_description": pd, "file": None}
         except Exception:
-            project_description = None
-    if not project_description:
-        raise HTTPException(status_code=400, detail="project_description is required (as form or JSON body)")
-    # Handle file upload and PDF extraction
+            pass
+    raise HTTPException(status_code=400, detail="project_description is required (as form or JSON body)")
+
+@app.post('/workflow/start')
+async def start_workflow(
+    deps: dict = Depends(get_project_description)
+):
+    project_description = deps["project_description"]
+    file = deps["file"]
     uploads_dir = os.path.join(os.path.dirname(__file__), 'uploads')
     os.makedirs(uploads_dir, exist_ok=True)
     file_content = ''
@@ -116,8 +119,7 @@ async def start_workflow(
     combined_description = project_description
     if file_content:
         combined_description += f"\n\n[File Content:]\n{file_content}"
-    if not context_id:
-        context_id = str(uuid.uuid4())
+    context_id = str(uuid.uuid4())
     asyncio.create_task(run_risk_workflow(combined_description, context_id))
     return {"context_id": context_id, "status": "started", "file_saved": bool(file_path), "file_path": file_path}
 
