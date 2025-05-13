@@ -47,13 +47,15 @@ export async function getWorkflows({
         }
 
         // Create workflow object
+        const createdAt = workflowData.createdAt && workflowData.createdAt !== '' ? workflowData.createdAt : ''
+        const updatedAt = workflowData.updatedAt && workflowData.updatedAt !== '' ? workflowData.updatedAt : ''
         return {
           id,
           title,
           description,
           status: workflowStatus,
-          createdAt: new Date().toISOString(), // This should come from the API in a real implementation
-          updatedAt: new Date().toISOString(), // This should come from the API in a real implementation
+          createdAt, // Safe fallback if missing
+          updatedAt, // Safe fallback if missing
         }
       } catch (error) {
         console.error(`Error fetching workflow ${id}:`, error)

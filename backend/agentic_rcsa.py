@@ -21,6 +21,7 @@ from agents import (
     OpenAIChatCompletionsModel,
 )
 from dotenv import load_dotenv
+from datetime import datetime, timezone
 
 load_dotenv()
 azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT")
@@ -62,6 +63,16 @@ class WorkflowContext:
     # New: Track workflow status and current step
     status: str = "in_progress"  # in_progress, awaiting_feedback, completed
     current_step: str = ""
+    # Add timestamps
+    createdAt: str = None
+    updatedAt: str = None
+
+    def __post_init__(self):
+        now = datetime.now(timezone.utc).isoformat()
+        if self.createdAt is None:
+            self.createdAt = now
+        if self.updatedAt is None:
+            self.updatedAt = now
 
     def record_step(self, step: str, output: Any, feedback: Any = None):
         if step == "generate_draft":
@@ -85,10 +96,13 @@ class WorkflowContext:
             self.status = "awaiting_feedback"
         else:
             self.status = "in_progress"
+        # Update updatedAt timestamp
+        self.updatedAt = datetime.now(timezone.utc).isoformat()
 
     def record_guardrail(self, step: str, violations: List[Dict[str, Any]]):
         self.guardrail_violations[step] = violations
         self.ui_updates.append({"step": f"guard_{step}", "output": violations})
+        self.updatedAt = datetime.now(timezone.utc).isoformat()
 
     def to_dict(self):
         return {
@@ -104,12 +118,17 @@ class WorkflowContext:
             "feedbacks": self.feedbacks,
             "status": self.status,
             "current_step": self.current_step,
+            "createdAt": self.createdAt,
+            "updatedAt": self.updatedAt,
         }
 
+# Update save_context to always update updatedAt
 def save_context(context, path):
+    context.updatedAt = datetime.now(timezone.utc).isoformat()
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(context.to_dict(), f, indent=2)
 
+# Update load_context to pass timestamps if present
 def load_context(path):
     with open(path, 'r', encoding='utf-8') as f:
         data = json.load(f)
