@@ -1,6 +1,6 @@
 // This file handles all API calls to the FastAPI backend
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 
 // Helper function for API calls
 async function fetchAPI(endpoint: string, options: RequestInit = {}) {
