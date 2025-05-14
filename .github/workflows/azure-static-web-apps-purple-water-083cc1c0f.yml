@@ -24,8 +24,8 @@ jobs:
           lfs: false
       - name: Install pnpm
         run: npm install -g pnpm
-      - name: Install dependencies with legacy peer deps
-        run: pnpm install --legacy-peer-deps
+      - name: Install dependencies ignoring peer dep conflicts
+        run: pnpm install --no-strict-peer-dependencies
         working-directory: ./frontend
       - name: Install OIDC Client from Core Package
         run: npm install @actions/core@1.6.0 @actions/http-client
