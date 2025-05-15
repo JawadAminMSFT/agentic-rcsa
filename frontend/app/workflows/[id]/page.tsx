@@ -4,6 +4,8 @@ import WorkflowHeader from "@/components/workflow-header"
 import WorkflowSteps from "@/components/workflow-steps"
 import WorkflowLoading from "@/components/workflow-loading"
 import { getWorkflowContext } from "@/lib/workflow-service"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export default function WorkflowDetailPage({ params }: { params: { id: string } }) {
   const [workflowContext, setWorkflowContext] = useState<any | null>(null)
@@ -58,6 +60,12 @@ export default function WorkflowDetailPage({ params }: { params: { id: string } 
         description={workflowContext.project_description}
         status={displayStatus}
       />
+      {/* Edit button under the header, right-aligned */}
+      <div className="mb-6 flex justify-end">
+        <Link href={`/workflows/${params.id}/edit`}>
+          <Button className="bg-black text-white hover:bg-neutral-800" variant="default" size="sm">Edit</Button>
+        </Link>
+      </div>
       <WorkflowSteps workflowContext={workflowContext} workflowId={params.id} />
     </main>
   )

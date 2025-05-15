@@ -142,3 +142,11 @@ export async function getSamples() {
 export async function getGuardrails() {
   return fetchAPI("/guardrails")
 }
+
+// Update workflow context
+export async function updateWorkflowContext(contextId: string, updatedContext: Partial<import("./types").WorkflowContext>) {
+  return fetchAPI(`/workflow/${contextId}`, {
+    method: "PUT",
+    body: JSON.stringify(updatedContext),
+  })
+}

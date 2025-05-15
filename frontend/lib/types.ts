@@ -11,6 +11,7 @@ export interface WorkflowContext {
   feedbacks: Record<string, string>
   status: "in_progress" | "awaiting_feedback" | "completed"
   current_step: string
+  updatedAt?: string // Add updatedAt for tracking edits
 }
 
 export interface Workflow {

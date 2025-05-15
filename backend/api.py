@@ -147,6 +147,31 @@ def list_workflows():
     files = [f for f in os.listdir(OUTPUT_DIR) if f.startswith('workflow_context_') and f.endswith('.json')]
     return {"workflows": [f.replace('workflow_context_', '').replace('.json', '') for f in files]}
 
+@app.put('/workflow/{context_id}')
+def update_workflow(context_id: str, updated_context: dict = Body(...)):
+    """
+    Update the workflow context JSON file with new values. Only allows updating editable fields.
+    """
+    context_path = os.path.join(OUTPUT_DIR, f'workflow_context_{context_id}.json')
+    if not os.path.exists(context_path):
+        raise HTTPException(status_code=404, detail="Workflow not found")
+    # Load existing context
+    with open(context_path, 'r', encoding='utf-8') as f:
+        context = json.load(f)
+    # Define non-editable/system fields
+    non_editable_fields = {'id', 'createdAt', 'context_id'}
+    # Update only allowed fields
+    for key, value in updated_context.items():
+        if key not in non_editable_fields:
+            context[key] = value
+    # Update timestamp
+    from datetime import datetime
+    context['updatedAt'] = datetime.utcnow().isoformat() + 'Z'
+    # Save updated context
+    with open(context_path, 'w', encoding='utf-8') as f:
+        json.dump(context, f, indent=2)
+    return context
+
 # --- Controls Catalog CRUD ---
 CONTROLS_PATH = os.path.join(DATA_DIR, 'controls.json')
 
