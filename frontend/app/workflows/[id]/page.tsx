@@ -4,8 +4,13 @@ import WorkflowHeader from "@/components/workflow-header"
 import WorkflowSteps from "@/components/workflow-steps"
 import WorkflowLoading from "@/components/workflow-loading"
 import { getWorkflowContext } from "@/lib/workflow-service"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { useParams } from "next/navigation"
 
-export default function WorkflowDetailPage({ params }: { params: { id: string } }) {
+export default function WorkflowDetailPage() {
+  const params = useParams() as { id: string | string[] }
+  const id = Array.isArray(params.id) ? params.id[0] : params.id
   const [workflowContext, setWorkflowContext] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -16,7 +21,7 @@ export default function WorkflowDetailPage({ params }: { params: { id: string } 
 
     async function fetchContext() {
       try {
-        const ctx = await getWorkflowContext(params.id)
+        const ctx = await getWorkflowContext(id)
         if (isMounted) {
           setWorkflowContext(ctx)
           setLoading(false)
@@ -37,7 +42,7 @@ export default function WorkflowDetailPage({ params }: { params: { id: string } 
       isMounted = false
       if (interval) clearInterval(interval)
     }
-  }, [params.id])
+  }, [id])
 
   if (loading || !workflowContext) {
     return <WorkflowLoading />
@@ -53,12 +58,18 @@ export default function WorkflowDetailPage({ params }: { params: { id: string } 
   return (
     <main className="container mx-auto py-8 px-4">
       <WorkflowHeader
-        id={params.id}
+        id={id}
         title={workflowContext.draft_submission?.project_title || "Untitled Project"}
         description={workflowContext.project_description}
         status={displayStatus}
       />
-      <WorkflowSteps workflowContext={workflowContext} workflowId={params.id} />
+      {/* Edit button under the header, right-aligned */}
+      <div className="mb-6 flex justify-end">
+        <Link href={`/workflows/${id}/edit`}>
+          <Button className="bg-black text-white hover:bg-neutral-800" variant="default" size="sm">Edit</Button>
+        </Link>
+      </div>
+      <WorkflowSteps workflowContext={workflowContext} workflowId={id} />
     </main>
   )
 }

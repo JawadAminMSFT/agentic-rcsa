@@ -153,6 +153,7 @@ This will launch the API at `http://127.0.0.1:8000` by default.
 
 - `POST /workflow/start` — Start a new risk workflow (provide `project_description` in the body)
 - `GET /workflow/{context_id}` — Get the current workflow state by context ID
+- `PUT /workflow/{context_id}` — Update the workflow context with new values
 - `POST /workflow/{context_id}/feedback` — Submit feedback for a workflow step
 - `GET /workflows` — List all workflow context IDs
 - CRUD endpoints for:
@@ -162,6 +163,33 @@ This will launch the API at `http://127.0.0.1:8000` by default.
   - `/guardrails` (GET, POST, PUT, DELETE)
 
 You can use tools like [Swagger UI](http://127.0.0.1:8000/docs) or [Postman](https://www.postman.com/) to interact with the API.
+
+---
+
+## Update Workflow Context
+
+### PUT /workflow/{context_id}
+
+Update the workflow context JSON file with new values. Only editable fields can be updated. System fields like `id`, `createdAt`, and `context_id` are protected. The `updatedAt` timestamp is automatically set.
+
+**Request:**
+- Method: `PUT`
+- URL: `/workflow/{context_id}`
+- Body: JSON object with the fields to update (e.g., `project_description`, `draft_submission`, etc.)
+
+**Response:**
+- 200: The updated workflow context as JSON
+- 404: If the workflow context is not found
+
+**Example:**
+```json
+{
+  "project_description": "Updated project description.",
+  "draft_submission": { "project_title": "New Title", ... },
+  "risk_mapping": [...],
+  ...
+}
+```
 
 ---
 
