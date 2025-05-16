@@ -19,20 +19,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
+    <ThemeProvider attribute="class" defaultTheme="light">
+      <html lang="en" suppressHydrationWarning>
+        <body className={inter.className}>
           <div className="min-h-screen flex flex-col">
             <MainNav />
             <div className="flex-1">{children}</div>
             <footer className="border-t py-4 mt-8">
               <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-                &copy; {new Date().getFullYear()} Microsoft Operational Risk Management Platform
+                &copy; 2025 Microsoft Operational Risk Management Platform
               </div>
             </footer>
           </div>
-        </ThemeProvider>
-      </body>
-    </html>
+        </body>
+      </html>
+    </ThemeProvider>
   )
 }
