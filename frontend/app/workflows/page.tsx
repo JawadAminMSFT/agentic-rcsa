@@ -12,27 +12,35 @@ export default function WorkflowsPage({
   searchParams: { status?: string; search?: string }
 }) {
   return (
-    <main className="container mx-auto py-8 px-4">
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Workflows</h1>
-            <p className="text-muted-foreground">Manage and monitor your risk assessment workflows</p>
+    <div className="min-h-screen p-6">
+      <div className="container mx-auto max-w-7xl">
+        <div className="glass-card rounded-2xl p-8 mb-8 shadow-xl">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                Risk Workflows
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Manage and monitor your risk assessment workflows
+              </p>
+            </div>
+            <Link href="/workflows/new">
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-xl flex items-center gap-2">
+                <PlusCircle className="h-5 w-5" />
+                New Assessment
+              </Button>
+            </Link>
           </div>
-          <Link href="/workflows/new">
-            <Button className="flex items-center gap-2">
-              <PlusCircle className="h-4 w-4" />
-              New Assessment
-            </Button>
-          </Link>
-        </div>
 
-        <WorkflowFilters initialStatus={searchParams.status} initialSearch={searchParams.search} />
+          <div className="mt-6">
+            <WorkflowFilters initialStatus={searchParams.status} initialSearch={searchParams.search} />
+          </div>
+        </div>
 
         <Suspense fallback={<LoadingWorkflows />}>
           <WorkflowList status={searchParams.status} search={searchParams.search} />
         </Suspense>
       </div>
-    </main>
+    </div>
   )
 }

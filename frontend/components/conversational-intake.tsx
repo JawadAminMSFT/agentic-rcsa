@@ -126,32 +126,50 @@ export default function ConversationalIntake() {
           if (msg.type === "input_audio_buffer.speech_started") {
             console.log('User started speaking')
             setUserSpeaking(true)
+            // When user starts speaking, assistant should stop
+            setAssistantSpeaking(false)
           } else if (msg.type === "input_audio_buffer.speech_stopped") {
             console.log('User stopped speaking')
             setUserSpeaking(false)
           }
           
-          // Handle assistant speech/response events
+          // Handle assistant response events
           else if (msg.type === "response.created") {
             console.log('Response created')
+            // Set assistant as speaking when response starts
             setAssistantSpeaking(true)
+            setUserSpeaking(false)
           } else if (msg.type === "response.audio.delta") {
             console.log('Assistant audio delta')
             setAssistantSpeaking(true)
+            setUserSpeaking(false)
           } else if (msg.type === "response.audio.done") {
             console.log('Assistant audio done')
-            setAssistantSpeaking(false)
+            // Don't immediately set to false, wait for response.done
           } else if (msg.type === "response.text.delta") {
             console.log('Assistant text delta')
             buffer += msg.delta || ""
-            setAssistantSpeaking(true)
+            // Set speaking when we get text content
+            if (msg.delta) {
+              setAssistantSpeaking(true)
+              setUserSpeaking(false)
+            }
           } else if (msg.type === "response.output_item.added") {
             console.log('Output item added')
+            // Assistant is generating output
             setAssistantSpeaking(true)
+            setUserSpeaking(false)
           } else if (msg.type === "response.done") {
             console.log('Response done')
             setAssistantSpeaking(false)
             setUserSpeaking(false)
+          } else if (msg.type === "conversation.item.created") {
+            console.log('Conversation item created')
+            // Only reset if it's a user message (to prepare for assistant response)
+            if (msg.item?.role === "user") {
+              setUserSpeaking(false)
+              // Don't reset assistant speaking here, let response events handle it
+            }
           } else if (msg.type === "session_end" || msg.type === "session.end") {
             setAssistantSpeaking(false)
             setUserSpeaking(false)
