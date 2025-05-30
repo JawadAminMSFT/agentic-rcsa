@@ -7,6 +7,7 @@ import json
 import uuid
 import asyncio
 import shutil
+import requests
 from pypdf import PdfReader
 from agentic_rcsa import (
     run_risk_workflow, WorkflowContext, save_context, load_context,
@@ -295,3 +296,23 @@ def delete_guardrail(ruleId: str):
     guardrails = [g for g in guardrails if g.get('ruleId') != ruleId]
     _save_json(GUARDRAILS_PATH, guardrails)
     return {"status": "deleted"}
+
+@app.post("/openai/realtime-session")
+async def get_realtime_ephemeral_key():
+    api_key = os.environ["AZURE_OPENAI_API_KEY"]
+    endpoint = os.environ["AZURE_OPENAI_ENDPOINT"].rstrip("/")
+    deployment = os.environ["AZURE_OPENAI_REALTIME_DEPLOYMENT"]
+    url = f"{endpoint}/openai/realtimeapi/sessions?api-version=2025-04-01-preview"
+    body = {
+        "model": deployment,
+        "voice": "verse",
+        "instructions": "You are an AI agent helping a user draft a project description for a risk assessment. Guide the user to provide all necessary details for a thorough and clear project intake. Respond in a friendly, conversational way and ask clarifying questions if needed.",
+    }
+    headers = {
+        "api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    resp = requests.post(url, headers=headers, json=body)
+    if resp.status_code != 200:
+        return JSONResponse(status_code=500, content={"error": resp.text})
+    return resp.json()
