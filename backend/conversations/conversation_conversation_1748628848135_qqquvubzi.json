@@ -1,0 +1,27 @@
+{
+  "conversationId": "conversation_1748628848135_qqquvubzi",
+  "sessionId": "sess_BcyX37Gqca0XAAGJuMd6d",
+  "messages": [
+    {
+      "id": "msg_1748628858166_hasrylyfb",
+      "role": "user",
+      "content": "good",
+      "timestamp": "2025-05-30T18:14:18.166Z",
+      "type": "text"
+    },
+    {
+      "id": "msg_1748628883415_xj3jomj56",
+      "role": "user",
+      "content": "its to focus on preferred demographics",
+      "timestamp": "2025-05-30T18:14:43.415Z",
+      "type": "text"
+    }
+  ],
+  "status": "active",
+  "createdAt": "2025-05-30T18:14:08.135Z",
+  "updatedAt": "2025-05-30T18:14:43.415Z",
+  "metadata": {
+    "totalMessages": 2,
+    "lastActivity": "2025-05-30T18:14:43.415Z"
+  }
+}

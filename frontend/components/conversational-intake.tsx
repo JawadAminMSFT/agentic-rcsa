@@ -67,6 +67,29 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
 const WEBRTC_URL = "https://eastus2.realtimeapi-preview.ai.azure.com/v1/realtimertc"
 const DEPLOYMENT = "gpt-4o-realtime-preview-2"
 
+// Message interface for conversation storage
+interface ConversationMessage {
+  id: string
+  role: "user" | "assistant"
+  content: string
+  timestamp: string
+  type: "text" | "audio" | "mixed"
+}
+
+// Conversation context interface
+interface ConversationContext {
+  conversationId: string
+  sessionId: string | null
+  messages: ConversationMessage[]
+  status: "active" | "completed" | "error"
+  createdAt: string
+  updatedAt: string
+  metadata: {
+    totalMessages: number
+    lastActivity: string
+  }
+}
+
 export default function ConversationalIntake() {
   const [sessionActive, setSessionActive] = useState(false)
   const [error, setError] = useState("")
@@ -77,17 +100,109 @@ export default function ConversationalIntake() {
   const [assistantSpeaking, setAssistantSpeaking] = useState(false)
   const [userSpeaking, setUserSpeaking] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
+  
+  // Conversation storage state
+  const [conversationContext, setConversationContext] = useState<ConversationContext | null>(null)
+  const conversationIdRef = useRef<string | null>(null)
+
+  // Initialize conversation context
+  function initializeConversation() {
+    const conversationId = `conversation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    conversationIdRef.current = conversationId
+    
+    const context: ConversationContext = {
+      conversationId,
+      sessionId: null,
+      messages: [],
+      status: "active",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        totalMessages: 0,
+        lastActivity: new Date().toISOString()
+      }
+    }
+    
+    setConversationContext(context)
+    return context
+  }
+
+  // Add message to conversation
+  function addMessage(role: "user" | "assistant", content: string, type: "text" | "audio" | "mixed" = "text") {
+    if (!conversationContext) return
+    
+    const message: ConversationMessage = {
+      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      role,
+      content,
+      timestamp: new Date().toISOString(),
+      type
+    }
+    
+    const updatedContext = {
+      ...conversationContext,
+      messages: [...conversationContext.messages, message],
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        totalMessages: conversationContext.messages.length + 1,
+        lastActivity: new Date().toISOString()
+      }
+    }
+    
+    setConversationContext(updatedContext)
+    
+    // Save to backend
+    saveConversationContext(updatedContext)
+  }
+
+  // Save conversation context to backend
+  async function saveConversationContext(context: ConversationContext) {
+    try {
+      await fetch(`${API_BASE_URL}/save-conversation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(context),
+      })
+    } catch (error) {
+      console.error('Failed to save conversation:', error)
+    }
+  }
+
+  // Complete conversation and finalize storage
+  async function completeConversation() {
+    if (!conversationContext) return
+    
+    const finalContext = {
+      ...conversationContext,
+      status: "completed" as const,
+      updatedAt: new Date().toISOString()
+    }
+    
+    setConversationContext(finalContext)
+    await saveConversationContext(finalContext)
+  }
 
   async function startSession() {
     setSessionActive(true)
     setError("")
     setLoading(true)
+    
+    // Initialize conversation tracking
+    const context = initializeConversation()
+    
     try {
       const res = await fetch(`${API_BASE_URL}/openai/realtime-session`, { method: "POST" })
       if (!res.ok) throw new Error()
       const data = await res.json()
       sessionIdRef.current = data.id
       const ephemeralKey = data.client_secret?.value
+
+      // Update conversation context with session ID
+      const updatedContext = { ...context, sessionId: data.id }
+      setConversationContext(updatedContext)
+      await saveConversationContext(updatedContext)
 
       const pc = new RTCPeerConnection()
       // setup audio
@@ -104,7 +219,8 @@ export default function ConversationalIntake() {
 
       function setupDataChannel(dc: RTCDataChannel) {
         dataChannelRef.current = dc
-        let buffer = ""
+        let assistantBuffer = ""
+        
         dc.onopen = () => {
           setIsConnected(true)
           dc.send(JSON.stringify({
@@ -116,6 +232,7 @@ export default function ConversationalIntake() {
             }
           }))
         }
+        
         dc.onmessage = (event) => {
           const msg = JSON.parse(event.data)
           
@@ -126,60 +243,143 @@ export default function ConversationalIntake() {
           if (msg.type === "input_audio_buffer.speech_started") {
             console.log('User started speaking')
             setUserSpeaking(true)
-            // When user starts speaking, assistant should stop
             setAssistantSpeaking(false)
           } else if (msg.type === "input_audio_buffer.speech_stopped") {
             console.log('User stopped speaking')
             setUserSpeaking(false)
+          } else if (msg.type === "input_audio_buffer.committed") {
+            console.log('User audio committed', msg)
+            // User speech was processed and committed - add placeholder message
+            addMessage("user", "[Audio input - processing...]", "audio")
           }
           
           // Handle assistant response events
           else if (msg.type === "response.created") {
             console.log('Response created')
-            // Set assistant as speaking when response starts
             setAssistantSpeaking(true)
             setUserSpeaking(false)
+            assistantBuffer = "" // Reset buffer for new response
           } else if (msg.type === "response.audio.delta") {
-            console.log('Assistant audio delta')
             setAssistantSpeaking(true)
             setUserSpeaking(false)
-          } else if (msg.type === "response.audio.done") {
-            console.log('Assistant audio done')
-            // Don't immediately set to false, wait for response.done
           } else if (msg.type === "response.text.delta") {
-            console.log('Assistant text delta')
-            buffer += msg.delta || ""
-            // Set speaking when we get text content
+            console.log('Assistant text delta:', msg.delta)
+            assistantBuffer += msg.delta || ""
             if (msg.delta) {
               setAssistantSpeaking(true)
               setUserSpeaking(false)
             }
           } else if (msg.type === "response.output_item.added") {
-            console.log('Output item added')
-            // Assistant is generating output
+            console.log('Output item added', msg)
             setAssistantSpeaking(true)
             setUserSpeaking(false)
           } else if (msg.type === "response.done") {
-            console.log('Response done')
+            console.log('Response done, buffer:', assistantBuffer)
             setAssistantSpeaking(false)
             setUserSpeaking(false)
+            
+            // Save the complete assistant response
+            if (assistantBuffer.trim()) {
+              addMessage("assistant", assistantBuffer.trim(), "mixed")
+              console.log('Added assistant message:', assistantBuffer.trim())
+            }
+            assistantBuffer = ""
           } else if (msg.type === "conversation.item.created") {
-            console.log('Conversation item created')
-            // Only reset if it's a user message (to prepare for assistant response)
+            console.log('Conversation item created', msg)
+            // Handle conversation item creation for both user and assistant
             if (msg.item?.role === "user") {
+              console.log('User conversation item:', msg.item)
+              // Check if this has audio content or text content
+              if (msg.item.content) {
+                // Look for text content first
+                const textContent = msg.item.content
+                  .filter((c: any) => c.type === "input_text")
+                  .map((c: any) => c.text)
+                  .join(" ")
+                
+                if (textContent.trim()) {
+                  addMessage("user", textContent.trim(), "text")
+                  console.log('Added user text message:', textContent.trim())
+                } else {
+                  // Check for audio content
+                  const hasAudio = msg.item.content.some((c: any) => c.type === "input_audio")
+                  if (hasAudio) {
+                    addMessage("user", "[Spoken message - awaiting transcription]", "audio")
+                    console.log('Added user audio message placeholder')
+                  }
+                }
+              } else {
+                // No content structure, but user item was created - likely audio
+                addMessage("user", "[Spoken message]", "audio")
+                console.log('Added user message fallback')
+              }
               setUserSpeaking(false)
-              // Don't reset assistant speaking here, let response events handle it
+            } else if (msg.item?.role === "assistant") {
+              console.log('Assistant conversation item:', msg.item)
+              // For assistant items, we might get text content here too
+              if (msg.item.content) {
+                const textContent = msg.item.content
+                  .filter((c: any) => c.type === "text")
+                  .map((c: any) => c.text)
+                  .join(" ")
+                
+                if (textContent.trim() && textContent !== assistantBuffer) {
+                  // Only add if it's different from what we're buffering
+                  addMessage("assistant", textContent.trim(), "text")
+                  console.log('Added assistant message from conversation item:', textContent.trim())
+                }
+              }
+            }
+          } else if (msg.type === "conversation.item.input_audio_transcription.completed") {
+            console.log('Audio transcription completed', msg)
+            // This event contains the transcribed text from user's audio
+            if (msg.transcript) {
+              console.log('Transcript received:', msg.transcript)
+              // Update the last user audio message with the actual transcription
+              setConversationContext(prev => {
+                if (!prev) return prev
+                const messages = [...prev.messages]
+                // Find the last user message with audio type and update it
+                for (let i = messages.length - 1; i >= 0; i--) {
+                  if (messages[i].role === "user" && 
+                      (messages[i].type === "audio" || messages[i].content.includes("processing") || messages[i].content.includes("transcription"))) {
+                    console.log('Updating message with transcript:', messages[i])
+                    messages[i] = {
+                      ...messages[i],
+                      content: msg.transcript,
+                      type: "mixed" // Now it has both audio and text
+                    }
+                    break
+                  }
+                }
+                const updatedContext = {
+                  ...prev,
+                  messages,
+                  updatedAt: new Date().toISOString(),
+                  metadata: {
+                    ...prev.metadata,
+                    lastActivity: new Date().toISOString()
+                  }
+                }
+                // Save updated context
+                saveConversationContext(updatedContext)
+                console.log('Updated conversation with transcript')
+                return updatedContext
+              })
             }
           } else if (msg.type === "session_end" || msg.type === "session.end") {
             setAssistantSpeaking(false)
             setUserSpeaking(false)
             setIsConnected(false)
+            completeConversation()
             dc.close()
           }
         }
+        
         dc.onclose = () => {
           setAssistantSpeaking(false)
           setIsConnected(false)
+          completeConversation()
         }
       }
 
@@ -205,6 +405,12 @@ export default function ConversationalIntake() {
     } catch {
       setError("Failed to start session.")
       setSessionActive(false)
+      // Mark conversation as error state
+      if (conversationContext) {
+        const errorContext = { ...conversationContext, status: "error" as const }
+        setConversationContext(errorContext)
+        await saveConversationContext(errorContext)
+      }
     } finally {
       setLoading(false)
     }
@@ -214,6 +420,9 @@ export default function ConversationalIntake() {
   function sendUserMessage(text: string) {
     const dataChannel = dataChannelRef.current
     if (dataChannel && dataChannel.readyState === "open") {
+      // Add user message to conversation immediately
+      addMessage("user", text, "text")
+      
       // 1. Send user message as a conversation item
       dataChannel.send(JSON.stringify({
         type: "conversation.item.create",
@@ -235,6 +444,47 @@ export default function ConversationalIntake() {
     }
   }
 
+  // Export conversation for backend processing
+  async function exportConversationForDraft() {
+    if (!conversationContext || conversationContext.messages.length === 0) {
+      setError("No conversation to export")
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await fetch(`${API_BASE_URL}/generate-draft-from-conversation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          conversationId: conversationContext.conversationId,
+          messages: conversationContext.messages
+        }),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log('Draft generation initiated:', result)
+        
+        // Redirect to workflow progress page
+        if (result.context_id) {
+          window.location.href = `/workflows/${result.context_id}`
+        } else {
+          setError("Draft generation started but no workflow ID returned")
+        }
+      } else {
+        throw new Error('Failed to generate draft')
+      }
+    } catch (error) {
+      setError("Failed to generate project draft from conversation")
+      console.error('Export error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-6">
       <div className="max-w-2xl mx-auto">
@@ -242,6 +492,11 @@ export default function ConversationalIntake() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Project Intake</h1>
           <p className="text-gray-600">Let's gather your project details through conversation</p>
+          {conversationContext && (
+            <div className="mt-2 text-xs text-gray-500">
+              Conversation ID: {conversationContext.conversationId} | Messages: {conversationContext.metadata.totalMessages}
+            </div>
+          )}
         </div>
 
         {/* Main Card */}
@@ -304,6 +559,32 @@ export default function ConversationalIntake() {
 
               {/* Text Input */}
               <UserInput onSend={sendUserMessage} disabled={loading} />
+
+              {/* Debug Info - Show conversation state */}
+              {conversationContext && (
+                <div className="mt-4 p-3 bg-gray-100 rounded-lg text-xs text-gray-600">
+                  <div>Messages: {conversationContext.messages.length}</div>
+                  <div>Status: {conversationContext.status}</div>
+                  <div>Last message: {conversationContext.messages.length > 0 ? 
+                    conversationContext.messages[conversationContext.messages.length - 1].content.substring(0, 50) + '...' : 
+                    'None'}</div>
+                </div>
+              )}
+
+              {/* Export to Draft Button - Show if session is active OR if there are messages */}
+              {conversationContext && (sessionActive || conversationContext.messages.length > 0) && (
+                <div className="mt-6 text-center">
+                  <Button 
+                    onClick={exportConversationForDraft}
+                    variant="outline"
+                    className="bg-white hover:bg-gray-50 border-gray-300"
+                    disabled={conversationContext.messages.length === 0}
+                  >
+                    Generate Project Draft {conversationContext.messages.length > 0 ? `(${conversationContext.messages.length} messages)` : '(No messages yet)'
+                    }
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
