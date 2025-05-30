@@ -13,14 +13,15 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
 
 interface WorkflowListProps {
-  limit?: number
   status?: string
   search?: string
 }
 
-export default function WorkflowList() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterStatus, setFilterStatus] = useState<"all" | "in_progress">("all")
+export default function WorkflowList({ status, search }: WorkflowListProps = {}) {
+  const [searchTerm, setSearchTerm] = useState(search || "")
+  const [filterStatus, setFilterStatus] = useState<"all" | "in_progress">(
+    status === "active" ? "in_progress" : "all"
+  )
   const [workflows, setWorkflows] = useState<any[]>([])
   const [error, setError] = useState<string | null>(null)
 

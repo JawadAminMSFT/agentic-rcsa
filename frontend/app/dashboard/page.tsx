@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import React, { Suspense } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
           </div>
           
           <Suspense fallback={<LoadingWorkflows />}>
-            <WorkflowList limit={5} />
+            <WorkflowList />
           </Suspense>
         </div>
       </div>
