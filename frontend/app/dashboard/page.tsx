@@ -79,22 +79,22 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="container mx-auto max-w-7xl space-y-8">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="container mx-auto max-w-7xl space-y-6">
         {/* Header Section */}
-        <div className="glass-card rounded-2xl p-8 shadow-xl">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-2xl font-semibold text-gray-900 mb-1">
                 Risk Assessment Dashboard
               </h1>
-              <p className="text-gray-600 text-lg">
-                Comprehensive overview of your Risk and Control Self-Assessment workflows
+              <p className="text-gray-600 text-sm">
+                Overview of your Risk and Control Self-Assessment workflows
               </p>
             </div>
             <Link href="/workflows/new">
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-3 rounded-xl flex items-center gap-2">
-                <PlusCircle className="h-5 w-5" />
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-4 py-2 rounded-md flex items-center gap-2">
+                <PlusCircle className="h-4 w-4" />
                 New Assessment
               </Button>
             </Link>
@@ -102,101 +102,101 @@ export default async function DashboardPage() {
         </div>
 
         {/* Primary Stats Cards - Assessment Outcomes */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-green-50 to-emerald-50">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-green-800">Approved</CardTitle>
-                  <CardDescription className="text-green-700">Risk assessments approved</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">Approved</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Risk assessments approved</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl">
-                  <CheckCircle className="h-6 w-6 text-white" />
+                <div className="p-2 bg-green-50 rounded-md">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-800">{approvedCount}</div>
+              <div className="text-2xl font-semibold text-gray-900">{approvedCount}</div>
             </CardContent>
             <CardFooter>
               <Link href="/workflows?status=approved">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-green-800 hover:bg-green-100 rounded-xl transition-all">
-                  <FileText className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-all h-8 px-3 text-xs">
+                  <FileText className="h-3 w-3" />
                   View approved
                 </Button>
               </Link>
             </CardFooter>
           </Card>
 
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-red-50 to-pink-50">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-red-800">Rejected</CardTitle>
-                  <CardDescription className="text-red-700">Risk assessments rejected</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">Rejected</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Risk assessments rejected</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl">
-                  <XCircle className="h-6 w-6 text-white" />
+                <div className="p-2 bg-red-50 rounded-md">
+                  <XCircle className="h-4 w-4 text-red-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-800">{rejectedCount}</div>
+              <div className="text-2xl font-semibold text-gray-900">{rejectedCount}</div>
             </CardContent>
             <CardFooter>
               <Link href="/workflows?status=rejected">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-red-800 hover:bg-red-100 rounded-xl transition-all">
-                  <FileText className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-all h-8 px-3 text-xs">
+                  <FileText className="h-3 w-3" />
                   View rejected
                 </Button>
               </Link>
             </CardFooter>
           </Card>
 
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 to-orange-50">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-amber-800">Awaiting Feedback</CardTitle>
-                  <CardDescription className="text-amber-700">Require your input</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">Awaiting Feedback</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Require your input</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-amber-400 to-orange-400 rounded-xl">
-                  <AlertCircle className="h-6 w-6 text-white" />
+                <div className="p-2 bg-amber-50 rounded-md">
+                  <AlertCircle className="h-4 w-4 text-amber-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-amber-800">{awaitingFeedbackCount}</div>
+              <div className="text-2xl font-semibold text-gray-900">{awaitingFeedbackCount}</div>
             </CardContent>
             <CardFooter>
               <Link href="/workflows?status=awaiting_feedback">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-amber-800 hover:bg-amber-100 rounded-xl transition-all">
-                  <Clock className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-md transition-all h-8 px-3 text-xs">
+                  <Clock className="h-3 w-3" />
                   View pending
                 </Button>
               </Link>
             </CardFooter>
           </Card>
 
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">In Progress</CardTitle>
-                  <CardDescription className="text-gray-600">Currently being processed</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">In Progress</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Currently being processed</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl">
-                  <TrendingUp className="h-6 w-6 text-white" />
+                <div className="p-2 bg-blue-50 rounded-md">
+                  <TrendingUp className="h-4 w-4 text-blue-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gray-900">{activeCount}</div>
+              <div className="text-2xl font-semibold text-gray-900">{activeCount}</div>
             </CardContent>
             <CardFooter>
               <Link href="/workflows?status=active">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2 hover:bg-blue-50 rounded-xl transition-all">
-                  <FileText className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-all h-8 px-3 text-xs">
+                  <FileText className="h-3 w-3" />
                   View active
                 </Button>
               </Link>
@@ -205,85 +205,85 @@ export default async function DashboardPage() {
         </div>
 
         {/* Secondary Stats Cards - Risk Intelligence */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Total Risks</CardTitle>
-                  <CardDescription className="text-gray-600">Identified across all workflows</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">Total Risks</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Identified across all workflows</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-purple-500 to-violet-500 rounded-xl">
-                  <Shield className="h-6 w-6 text-white" />
+                <div className="p-2 bg-purple-50 rounded-md">
+                  <Shield className="h-4 w-4 text-purple-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gray-900">{totalRisks}</div>
+              <div className="text-2xl font-semibold text-gray-900">{totalRisks}</div>
             </CardContent>
           </Card>
 
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Critical Issues</CardTitle>
-                  <CardDescription className="text-red-600">High severity issues flagged</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">Critical Issues</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">High severity issues flagged</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl">
-                  <AlertTriangle className="h-6 w-6 text-white" />
+                <div className="p-2 bg-orange-50 rounded-md">
+                  <AlertTriangle className="h-4 w-4 text-orange-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-600">{criticalIssues}</div>
-              <div className="text-sm text-gray-500 mt-1">of {totalIssues} total issues</div>
+              <div className="text-2xl font-semibold text-gray-900">{criticalIssues}</div>
+              <div className="text-xs text-gray-500 mt-1">of {totalIssues} total issues</div>
             </CardContent>
           </Card>
 
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Guardrail Violations</CardTitle>
-                  <CardDescription className="text-gray-600">Compliance violations detected</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">Guardrail Violations</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Compliance violations detected</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl">
-                  <AlertCircle className="h-6 w-6 text-white" />
+                <div className="p-2 bg-yellow-50 rounded-md">
+                  <AlertCircle className="h-4 w-4 text-yellow-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-yellow-600">{guardrailViolations}</div>
+              <div className="text-2xl font-semibold text-gray-900">{guardrailViolations}</div>
             </CardContent>
           </Card>
 
-          <Card className="glass-card rounded-2xl shadow-lg border-0 hover:shadow-xl transition-all duration-300">
+          <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-semibold text-gray-900">Mitigations</CardTitle>
-                  <CardDescription className="text-gray-600">Proposed risk mitigations</CardDescription>
+                  <CardTitle className="text-sm font-medium text-gray-700">Mitigations</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">Proposed risk mitigations</CardDescription>
                 </div>
-                <div className="p-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl">
-                  <CheckCircle className="h-6 w-6 text-white" />
+                <div className="p-2 bg-cyan-50 rounded-md">
+                  <CheckCircle className="h-4 w-4 text-cyan-600" />
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-gray-900">{totalMitigations}</div>
+              <div className="text-2xl font-semibold text-gray-900">{totalMitigations}</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Recent Workflows Section */}
-        <div className="glass-card rounded-2xl p-8 shadow-xl">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
+        <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">
               Recent Workflows
             </h2>
             <Link href="/workflows">
-              <Button variant="outline" className="rounded-xl border-gray-200 hover:bg-white/80 transition-all duration-300">
+              <Button variant="outline" className="rounded-md border-gray-300 hover:bg-gray-50 text-gray-700 text-sm px-3 py-2">
                 View All Workflows
               </Button>
             </Link>

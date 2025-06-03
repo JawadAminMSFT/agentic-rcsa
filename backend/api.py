@@ -31,22 +31,22 @@ OUTPUT_DIR = os.path.join(os.path.dirname(__file__), 'output')
 
 # --- Pydantic Models for CRUD ---
 class ControlItem(BaseModel):
-    control_id: str
+    id: str
     name: str
     description: Optional[str] = None
-    # Add other fields as needed
+    subriskIds: Optional[List[str]] = None
 
 class RiskItem(BaseModel):
-    risk_id: str
-    name: str
-    category: Optional[str] = None
-    # Add other fields as needed
+    id: str
+    category: str
+    subrisk: Optional[str] = None
+    description: Optional[str] = None
 
 class GuardrailItem(BaseModel):
-    ruleId: str
+    id: str
     description: str
     severity: str
-    # Add other fields as needed
+    applicableSteps: Optional[List[str]] = None
 
 class SampleSubmissionItem(BaseModel):
     submissionId: str
@@ -213,7 +213,7 @@ def add_control(item: ControlItem):
 def update_control(control_id: str, item: ControlItem):
     controls = _load_json(CONTROLS_PATH)
     for idx, c in enumerate(controls):
-        if c.get('control_id') == control_id:
+        if c.get('id') == control_id:
             controls[idx] = item.dict()
             _save_json(CONTROLS_PATH, controls)
             return {"status": "updated", "item": item}
@@ -222,7 +222,7 @@ def update_control(control_id: str, item: ControlItem):
 @app.delete('/controls/{control_id}')
 def delete_control(control_id: str):
     controls = _load_json(CONTROLS_PATH)
-    controls = [c for c in controls if c.get('control_id') != control_id]
+    controls = [c for c in controls if c.get('id') != control_id]
     _save_json(CONTROLS_PATH, controls)
     return {"status": "deleted"}
 
@@ -244,7 +244,7 @@ def add_risk(item: RiskItem):
 def update_risk(risk_id: str, item: RiskItem):
     risks = _load_json(RISK_PATH)
     for idx, r in enumerate(risks):
-        if r.get('risk_id') == risk_id:
+        if r.get('id') == risk_id:
             risks[idx] = item.dict()
             _save_json(RISK_PATH, risks)
             return {"status": "updated", "item": item}
@@ -253,7 +253,7 @@ def update_risk(risk_id: str, item: RiskItem):
 @app.delete('/risks/{risk_id}')
 def delete_risk(risk_id: str):
     risks = _load_json(RISK_PATH)
-    risks = [r for r in risks if r.get('risk_id') != risk_id]
+    risks = [r for r in risks if r.get('id') != risk_id]
     _save_json(RISK_PATH, risks)
     return {"status": "deleted"}
 
@@ -302,20 +302,20 @@ def add_guardrail(item: GuardrailItem):
     _save_json(GUARDRAILS_PATH, guardrails)
     return {"status": "added", "item": item}
 
-@app.put('/guardrails/{ruleId}')
-def update_guardrail(ruleId: str, item: GuardrailItem):
+@app.put('/guardrails/{guardrail_id}')
+def update_guardrail(guardrail_id: str, item: GuardrailItem):
     guardrails = _load_json(GUARDRAILS_PATH)
     for idx, g in enumerate(guardrails):
-        if g.get('ruleId') == ruleId:
+        if g.get('id') == guardrail_id:
             guardrails[idx] = item.dict()
             _save_json(GUARDRAILS_PATH, guardrails)
             return {"status": "updated", "item": item}
     raise HTTPException(status_code=404, detail="Guardrail not found")
 
-@app.delete('/guardrails/{ruleId}')
-def delete_guardrail(ruleId: str):
+@app.delete('/guardrails/{guardrail_id}')
+def delete_guardrail(guardrail_id: str):
     guardrails = _load_json(GUARDRAILS_PATH)
-    guardrails = [g for g in guardrails if g.get('ruleId') != ruleId]
+    guardrails = [g for g in guardrails if g.get('id') != guardrail_id]
     _save_json(GUARDRAILS_PATH, guardrails)
     return {"status": "deleted"}
 

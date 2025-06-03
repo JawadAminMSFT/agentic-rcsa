@@ -59,104 +59,67 @@ export default function WorkflowList({ status, search }: WorkflowListProps = {})
   }
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="container mx-auto max-w-7xl">
-        {/* Header Section with Glass Card */}
-        <div className="glass-card rounded-2xl p-8 mb-8 shadow-xl">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                Risk Workflows
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Manage and monitor your operational risk assessment workflows
-              </p>
-            </div>
-          </div>
-          
-          {/* Search and Filter Section */}
-          <div className="flex flex-col md:flex-row gap-4 mt-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                placeholder="Search workflows..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 rounded-xl border-gray-200 focus:border-blue-400 focus:ring-blue-400 bg-white/80 backdrop-blur-sm"
-              />
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => setFilterStatus(filterStatus === "all" ? "in_progress" : "all")}
-              className="rounded-xl border-gray-200 hover:bg-white/80 transition-all duration-300"
-            >
-              <Filter className="w-4 h-4 mr-2" />
-              {filterStatus === "all" ? "All Status" : "In Progress"}
-            </Button>
-          </div>
-        </div>
-
-        {/* Workflows Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredWorkflows.map((workflow) => (
-            <Link key={workflow.id} href={`/workflows/${workflow.id}`}>
-              <Card className="glass-card rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] cursor-pointer group border-0">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                        {workflow.title}
-                      </CardTitle>
-                      <p className="text-sm text-gray-500 mt-1">
-                        ID: {workflow.id}
-                      </p>
-                    </div>
-                    <StatusBadge status={workflow.status} />
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-sm text-gray-600 line-clamp-2">
-                      {workflow.description || "No description available"}
+    <div className="space-y-4">
+      {/* Workflows Grid */}
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {filteredWorkflows.map((workflow) => (
+          <Link key={workflow.id} href={`/workflows/${workflow.id}`}>
+            <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer group">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <CardTitle className="text-sm font-medium text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-2">
+                      {workflow.title}
+                    </CardTitle>
+                    <p className="text-xs text-gray-500 mt-1">
+                      ID: {workflow.id}
                     </p>
-                    
-                    <div className="flex items-center gap-4 text-xs text-gray-500">
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {formatDistanceToNow(new Date(workflow.updatedAt), { addSuffix: true })}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <FileText className="w-3 h-3" />
-                        {workflow.current_step}
-                      </div>
+                  </div>
+                  <StatusBadge status={workflow.status} />
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-3">
+                  <p className="text-xs text-gray-600 line-clamp-2">
+                    {workflow.description || "No description available"}
+                  </p>
+                  
+                  <div className="flex items-center gap-3 text-xs text-gray-500">
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {formatDistanceToNow(new Date(workflow.updatedAt), { addSuffix: true })}
                     </div>
-                    
-                    {/* Progress Indicator */}
-                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                      <div 
-                        className="h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300"
-                        style={{ width: `${getProgressPercentage(workflow.current_step)}%` }}
-                      />
+                    <div className="flex items-center gap-1">
+                      <FileText className="w-3 h-3" />
+                      {workflow.current_step}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-
-        {filteredWorkflows.length === 0 && (
-          <div className="glass-card rounded-2xl p-12 text-center shadow-lg">
-            <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No workflows found</h3>
-            <p className="text-gray-600 mb-6">
-              {searchTerm || filterStatus !== "all"
-                ? "Try adjusting your search or filter criteria"
-                : "Get started by creating your first risk assessment workflow"}
-            </p>
-          </div>
-        )}
+                  
+                  {/* Progress Indicator */}
+                  <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                    <div 
+                      className="h-1.5 bg-gray-600 rounded-full transition-all duration-300"
+                      style={{ width: `${getProgressPercentage(workflow.current_step)}%` }}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
       </div>
+
+      {filteredWorkflows.length === 0 && (
+        <div className="bg-white rounded-lg p-8 text-center shadow-sm border border-gray-200">
+          <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <h3 className="text-sm font-medium text-gray-900 mb-2">No workflows found</h3>
+          <p className="text-xs text-gray-600 mb-4">
+            {searchTerm || filterStatus !== "all"
+              ? "Try adjusting your search or filter criteria"
+              : "Get started by creating your first risk assessment workflow"}
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -165,26 +128,26 @@ function StatusBadge({ status }: { status: string }) {
   switch (status.toLowerCase()) {
     case "approved":
       return (
-        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 rounded-full px-3 py-1 shadow-sm">
+        <Badge className="bg-green-50 text-green-700 border border-green-200 rounded-md px-2 py-1 text-xs">
           Approved
         </Badge>
       )
     case "rejected":
       return (
-        <Badge className="bg-gradient-to-r from-red-500 to-pink-500 text-white border-0 rounded-full px-3 py-1 shadow-sm">
+        <Badge className="bg-red-50 text-red-700 border border-red-200 rounded-md px-2 py-1 text-xs">
           Rejected
         </Badge>
       )
     case "awaiting_feedback":
       return (
-        <Badge className="bg-gradient-to-r from-amber-400 to-orange-400 text-white border-0 rounded-full px-3 py-1 shadow-sm flex items-center gap-1">
+        <Badge className="bg-amber-50 text-amber-700 border border-amber-200 rounded-md px-2 py-1 text-xs flex items-center gap-1">
           <Clock className="h-3 w-3" />
           Feedback Needed
         </Badge>
       )
     default:
       return (
-        <Badge className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-0 rounded-full px-3 py-1 shadow-sm">
+        <Badge className="bg-blue-50 text-blue-700 border border-blue-200 rounded-md px-2 py-1 text-xs">
           In Progress
         </Badge>
       )

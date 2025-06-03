@@ -97,6 +97,8 @@ export default function ConversationalIntake() {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const dataChannelRef = useRef<RTCDataChannel | null>(null)
   const sessionIdRef = useRef<string | null>(null)
+  const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
+  const mediaStreamRef = useRef<MediaStream | null>(null)
   const [assistantSpeaking, setAssistantSpeaking] = useState(false)
   const [userSpeaking, setUserSpeaking] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
@@ -184,6 +186,58 @@ export default function ConversationalIntake() {
     await saveConversationContext(finalContext)
   }
 
+  // End session function to clean up all resources
+  async function endSession() {
+    setLoading(true)
+    
+    try {
+      // Stop all media tracks
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach(track => {
+          track.stop()
+        })
+        mediaStreamRef.current = null
+      }
+      
+      // Close data channel
+      if (dataChannelRef.current) {
+        dataChannelRef.current.close()
+        dataChannelRef.current = null
+      }
+      
+      // Close peer connection
+      if (peerConnectionRef.current) {
+        peerConnectionRef.current.close()
+        peerConnectionRef.current = null
+      }
+      
+      // Clean up audio element
+      if (audioRef.current) {
+        audioRef.current.srcObject = null
+        if (audioRef.current.parentNode) {
+          audioRef.current.parentNode.removeChild(audioRef.current)
+        }
+        audioRef.current = null
+      }
+      
+      // Complete conversation tracking
+      await completeConversation()
+      
+      // Reset states
+      setSessionActive(false)
+      setIsConnected(false)
+      setAssistantSpeaking(false)
+      setUserSpeaking(false)
+      sessionIdRef.current = null
+      
+    } catch (error) {
+      console.error('Error ending session:', error)
+      setError("Error ending session")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   async function startSession() {
     setSessionActive(true)
     setError("")
@@ -205,6 +259,7 @@ export default function ConversationalIntake() {
       await saveConversationContext(updatedContext)
 
       const pc = new RTCPeerConnection()
+      peerConnectionRef.current = pc
       // setup audio
       let audioEl = audioRef.current
       if (!audioEl) {
@@ -216,6 +271,7 @@ export default function ConversationalIntake() {
       pc.ontrack = (e) => { audioEl!.srcObject = e.streams[0] }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       stream.getTracks().forEach(t => pc.addTrack(t, stream))
+      mediaStreamRef.current = stream
 
       function setupDataChannel(dc: RTCDataChannel) {
         dataChannelRef.current = dc
@@ -560,6 +616,40 @@ export default function ConversationalIntake() {
               {/* Text Input */}
               <UserInput onSend={sendUserMessage} disabled={loading} />
 
+              {/* Session Controls */}
+              <div className="mt-6 flex justify-center gap-4">
+                <Button 
+                  onClick={endSession}
+                  variant="outline"
+                  disabled={loading}
+                  className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-red-300 border-t-red-700 rounded-full animate-spin mr-2" />
+                      Ending...
+                    </>
+                  ) : (
+                    <>
+                      <MicOff className="w-4 h-4 mr-2" />
+                      End Session
+                    </>
+                  )}
+                </Button>
+                
+                {/* Export to Draft Button */}
+                {conversationContext && conversationContext.messages.length > 0 && (
+                  <Button 
+                    onClick={exportConversationForDraft}
+                    variant="outline"
+                    className="bg-white hover:bg-gray-50 border-gray-300"
+                    disabled={loading}
+                  >
+                    Generate Project Draft ({conversationContext.messages.length} messages)
+                  </Button>
+                )}
+              </div>
+
               {/* Debug Info - Show conversation state */}
               {conversationContext && (
                 <div className="mt-4 p-3 bg-gray-100 rounded-lg text-xs text-gray-600">
@@ -568,21 +658,6 @@ export default function ConversationalIntake() {
                   <div>Last message: {conversationContext.messages.length > 0 ? 
                     conversationContext.messages[conversationContext.messages.length - 1].content.substring(0, 50) + '...' : 
                     'None'}</div>
-                </div>
-              )}
-
-              {/* Export to Draft Button - Show if session is active OR if there are messages */}
-              {conversationContext && (sessionActive || conversationContext.messages.length > 0) && (
-                <div className="mt-6 text-center">
-                  <Button 
-                    onClick={exportConversationForDraft}
-                    variant="outline"
-                    className="bg-white hover:bg-gray-50 border-gray-300"
-                    disabled={conversationContext.messages.length === 0}
-                  >
-                    Generate Project Draft {conversationContext.messages.length > 0 ? `(${conversationContext.messages.length} messages)` : '(No messages yet)'
-                    }
-                  </Button>
                 </div>
               )}
             </div>
