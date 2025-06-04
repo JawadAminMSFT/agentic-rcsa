@@ -106,6 +106,19 @@ export default function ConversationalIntake() {
   // Conversation storage state
   const [conversationContext, setConversationContext] = useState<ConversationContext | null>(null)
   const conversationIdRef = useRef<string | null>(null)
+  
+  // Track if conversation has unsaved changes
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  
+  // Chat scroll ref for auto-scrolling
+  const chatMessagesRef = useRef<HTMLDivElement>(null)
+
+  // Auto-scroll to bottom when new messages are added
+  useEffect(() => {
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight
+    }
+  }, [conversationContext?.messages])
 
   // Initialize conversation context
   function initializeConversation() {
@@ -129,32 +142,47 @@ export default function ConversationalIntake() {
     return context
   }
 
-  // Add message to conversation
+  // Add message to conversation (local only, no auto-save)
   function addMessage(role: "user" | "assistant", content: string, type: "text" | "audio" | "mixed" = "text") {
-    if (!conversationContext) return
-    
     const message: ConversationMessage = {
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       role,
       content,
       timestamp: new Date().toISOString(),
       type
-    }
-    
-    const updatedContext = {
-      ...conversationContext,
-      messages: [...conversationContext.messages, message],
-      updatedAt: new Date().toISOString(),
-      metadata: {
-        totalMessages: conversationContext.messages.length + 1,
-        lastActivity: new Date().toISOString()
+    };
+
+    setConversationContext(prevCtx => {
+      if (!prevCtx) {
+        const currentConvId = conversationIdRef.current || `conv_addmsg_fallback_${Date.now()}`;
+        if (!conversationIdRef.current) {
+          conversationIdRef.current = currentConvId;
+        }
+        return {
+          conversationId: currentConvId,
+          sessionId: sessionIdRef.current,
+          messages: [message],
+          status: "active",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          metadata: { totalMessages: 1, lastActivity: new Date().toISOString() }
+        };
       }
-    }
-    
-    setConversationContext(updatedContext)
-    
-    // Save to backend
-    saveConversationContext(updatedContext)
+  
+      const newMessages = [...prevCtx.messages, message];
+      
+      return {
+        ...prevCtx,
+        messages: newMessages,
+        updatedAt: new Date().toISOString(),
+        metadata: { 
+          ...prevCtx.metadata, 
+          totalMessages: newMessages.length, 
+          lastActivity: new Date().toISOString() 
+        }
+      };
+    });
+    setHasUnsavedChanges(true);
   }
 
   // Save conversation context to backend
@@ -174,16 +202,20 @@ export default function ConversationalIntake() {
 
   // Complete conversation and finalize storage
   async function completeConversation() {
-    if (!conversationContext) return
-    
-    const finalContext = {
+    if (!conversationContext) {
+      return;
+    }
+
+    const finalContext: ConversationContext = {
       ...conversationContext,
       status: "completed" as const,
       updatedAt: new Date().toISOString()
-    }
-    
-    setConversationContext(finalContext)
-    await saveConversationContext(finalContext)
+    };
+
+    setConversationContext(finalContext);
+    setHasUnsavedChanges(false);
+
+    await saveConversationContext(finalContext);
   }
 
   // End session function to clean up all resources
@@ -191,6 +223,12 @@ export default function ConversationalIntake() {
     setLoading(true)
     
     try {
+      // Save all accumulated changes before ending
+      if (conversationContext && hasUnsavedChanges) {
+        await saveConversationContext(conversationContext)
+        setHasUnsavedChanges(false)
+      }
+      
       // Stop all media tracks
       if (mediaStreamRef.current) {
         mediaStreamRef.current.getTracks().forEach(track => {
@@ -231,7 +269,6 @@ export default function ConversationalIntake() {
       sessionIdRef.current = null
       
     } catch (error) {
-      console.error('Error ending session:', error)
       setError("Error ending session")
     } finally {
       setLoading(false)
@@ -244,22 +281,36 @@ export default function ConversationalIntake() {
     setLoading(true)
     
     // Initialize conversation tracking
-    const context = initializeConversation()
+    initializeConversation()
     
     try {
       const res = await fetch(`${API_BASE_URL}/openai/realtime-session`, { method: "POST" })
       if (!res.ok) throw new Error()
       const data = await res.json()
-      sessionIdRef.current = data.id
+      
+      const sid = data.id;
+      sessionIdRef.current = sid;
       const ephemeralKey = data.client_secret?.value
 
       // Update conversation context with session ID
-      const updatedContext = { ...context, sessionId: data.id }
-      setConversationContext(updatedContext)
-      await saveConversationContext(updatedContext)
+      setConversationContext(prevCtx => {
+        if (!prevCtx) {
+          return {
+            conversationId: conversationIdRef.current || `conv_init_fallback_${Date.now()}`,
+            messages: [],
+            status: "active",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            metadata: { totalMessages: 0, lastActivity: new Date().toISOString() },
+            sessionId: sid
+          };
+        }
+        return { ...prevCtx, sessionId: sid };
+      });
 
       const pc = new RTCPeerConnection()
       peerConnectionRef.current = pc
+      
       // setup audio
       let audioEl = audioRef.current
       if (!audioEl) {
@@ -283,8 +334,10 @@ export default function ConversationalIntake() {
             type: "session.update",
             session: {
               voice: "verse",
-              instructions: "You are an AI agent helping a user draft a project description for a risk assessment. Guide the user to provide all necessary details for a thorough and clear project intake. Respond in a friendly, conversational way and ask clarifying questions if needed.",
-              modalities: ["text", "audio"]
+              modalities: ["text", "audio"],
+              input_audio_transcription: {
+                model: "whisper-1"
+              }
             }
           }))
         }
@@ -292,62 +345,52 @@ export default function ConversationalIntake() {
         dc.onmessage = (event) => {
           const msg = JSON.parse(event.data)
           
-          // Debug logging
-          console.log('Server event:', msg.type, msg)
-          
           // Handle user speech detection events
           if (msg.type === "input_audio_buffer.speech_started") {
-            console.log('User started speaking')
             setUserSpeaking(true)
             setAssistantSpeaking(false)
           } else if (msg.type === "input_audio_buffer.speech_stopped") {
-            console.log('User stopped speaking')
             setUserSpeaking(false)
           } else if (msg.type === "input_audio_buffer.committed") {
-            console.log('User audio committed', msg)
-            // User speech was processed and committed - add placeholder message
-            addMessage("user", "[Audio input - processing...]", "audio")
+            // Audio committed - no action needed
           }
           
           // Handle assistant response events
           else if (msg.type === "response.created") {
-            console.log('Response created')
             setAssistantSpeaking(true)
             setUserSpeaking(false)
-            assistantBuffer = "" // Reset buffer for new response
+            assistantBuffer = ""
           } else if (msg.type === "response.audio.delta") {
             setAssistantSpeaking(true)
             setUserSpeaking(false)
           } else if (msg.type === "response.text.delta") {
-            console.log('Assistant text delta:', msg.delta)
             assistantBuffer += msg.delta || ""
             if (msg.delta) {
               setAssistantSpeaking(true)
               setUserSpeaking(false)
             }
+          } else if (msg.type === "response.audio_transcript.delta") {
+            if (msg.delta) {
+              assistantBuffer += msg.delta
+              setAssistantSpeaking(true)
+              setUserSpeaking(false)
+            }
           } else if (msg.type === "response.output_item.added") {
-            console.log('Output item added', msg)
             setAssistantSpeaking(true)
             setUserSpeaking(false)
           } else if (msg.type === "response.done") {
-            console.log('Response done, buffer:', assistantBuffer)
             setAssistantSpeaking(false)
             setUserSpeaking(false)
             
             // Save the complete assistant response
             if (assistantBuffer.trim()) {
               addMessage("assistant", assistantBuffer.trim(), "mixed")
-              console.log('Added assistant message:', assistantBuffer.trim())
             }
             assistantBuffer = ""
           } else if (msg.type === "conversation.item.created") {
-            console.log('Conversation item created', msg)
             // Handle conversation item creation for both user and assistant
             if (msg.item?.role === "user") {
-              console.log('User conversation item:', msg.item)
-              // Check if this has audio content or text content
               if (msg.item.content) {
-                // Look for text content first
                 const textContent = msg.item.content
                   .filter((c: any) => c.type === "input_text")
                   .map((c: any) => c.text)
@@ -355,24 +398,9 @@ export default function ConversationalIntake() {
                 
                 if (textContent.trim()) {
                   addMessage("user", textContent.trim(), "text")
-                  console.log('Added user text message:', textContent.trim())
-                } else {
-                  // Check for audio content
-                  const hasAudio = msg.item.content.some((c: any) => c.type === "input_audio")
-                  if (hasAudio) {
-                    addMessage("user", "[Spoken message - awaiting transcription]", "audio")
-                    console.log('Added user audio message placeholder')
-                  }
                 }
-              } else {
-                // No content structure, but user item was created - likely audio
-                addMessage("user", "[Spoken message]", "audio")
-                console.log('Added user message fallback')
               }
-              setUserSpeaking(false)
             } else if (msg.item?.role === "assistant") {
-              console.log('Assistant conversation item:', msg.item)
-              // For assistant items, we might get text content here too
               if (msg.item.content) {
                 const textContent = msg.item.content
                   .filter((c: any) => c.type === "text")
@@ -380,49 +408,16 @@ export default function ConversationalIntake() {
                   .join(" ")
                 
                 if (textContent.trim() && textContent !== assistantBuffer) {
-                  // Only add if it's different from what we're buffering
                   addMessage("assistant", textContent.trim(), "text")
-                  console.log('Added assistant message from conversation item:', textContent.trim())
                 }
               }
             }
           } else if (msg.type === "conversation.item.input_audio_transcription.completed") {
-            console.log('Audio transcription completed', msg)
-            // This event contains the transcribed text from user's audio
-            if (msg.transcript) {
-              console.log('Transcript received:', msg.transcript)
-              // Update the last user audio message with the actual transcription
-              setConversationContext(prev => {
-                if (!prev) return prev
-                const messages = [...prev.messages]
-                // Find the last user message with audio type and update it
-                for (let i = messages.length - 1; i >= 0; i--) {
-                  if (messages[i].role === "user" && 
-                      (messages[i].type === "audio" || messages[i].content.includes("processing") || messages[i].content.includes("transcription"))) {
-                    console.log('Updating message with transcript:', messages[i])
-                    messages[i] = {
-                      ...messages[i],
-                      content: msg.transcript,
-                      type: "mixed" // Now it has both audio and text
-                    }
-                    break
-                  }
-                }
-                const updatedContext = {
-                  ...prev,
-                  messages,
-                  updatedAt: new Date().toISOString(),
-                  metadata: {
-                    ...prev.metadata,
-                    lastActivity: new Date().toISOString()
-                  }
-                }
-                // Save updated context
-                saveConversationContext(updatedContext)
-                console.log('Updated conversation with transcript')
-                return updatedContext
-              })
+            if (msg.transcript && msg.transcript.trim()) {
+              addMessage("user", msg.transcript, "mixed");
             }
+          } else if (msg.type === "conversation.item.input_audio_transcription.failed") {
+            // Transcription failed - handled silently
           } else if (msg.type === "session_end" || msg.type === "session.end") {
             setAssistantSpeaking(false)
             setUserSpeaking(false)
@@ -461,11 +456,9 @@ export default function ConversationalIntake() {
     } catch {
       setError("Failed to start session.")
       setSessionActive(false)
-      // Mark conversation as error state
       if (conversationContext) {
         const errorContext = { ...conversationContext, status: "error" as const }
         setConversationContext(errorContext)
-        await saveConversationContext(errorContext)
       }
     } finally {
       setLoading(false)
@@ -503,12 +496,18 @@ export default function ConversationalIntake() {
   // Export conversation for backend processing
   async function exportConversationForDraft() {
     if (!conversationContext || conversationContext.messages.length === 0) {
-      setError("No conversation to export")
-      return
+      setError("No conversation to export");
+      return;
     }
 
     setLoading(true)
     try {
+      // Save all accumulated changes before exporting
+      if (hasUnsavedChanges) {
+        await saveConversationContext(conversationContext)
+        setHasUnsavedChanges(false)
+      }
+      
       const response = await fetch(`${API_BASE_URL}/generate-draft-from-conversation`, {
         method: 'POST',
         headers: {
@@ -522,7 +521,6 @@ export default function ConversationalIntake() {
 
       if (response.ok) {
         const result = await response.json()
-        console.log('Draft generation initiated:', result)
         
         // Redirect to workflow progress page
         if (result.context_id) {
@@ -535,7 +533,6 @@ export default function ConversationalIntake() {
       }
     } catch (error) {
       setError("Failed to generate project draft from conversation")
-      console.error('Export error:', error)
     } finally {
       setLoading(false)
     }
@@ -551,6 +548,9 @@ export default function ConversationalIntake() {
           {conversationContext && (
             <div className="mt-2 text-xs text-gray-500">
               Conversation ID: {conversationContext.conversationId} | Messages: {conversationContext.metadata.totalMessages}
+              {hasUnsavedChanges && (
+                <span className="ml-2 text-amber-600 font-medium">• Unsaved changes</span>
+              )}
             </div>
           )}
         </div>
@@ -568,24 +568,50 @@ export default function ConversationalIntake() {
                 <p className="text-gray-600 text-sm">Click below to begin your AI-powered project intake session</p>
               </div>
               
-              <Button 
-                onClick={startSession} 
-                disabled={loading}
-                size="lg" 
-                className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-3 rounded-full font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    Connecting...
-                  </>
-                ) : (
-                  <>
-                    <Mic className="mr-2 h-5 w-5" />
-                    Start AI Conversation
-                  </>
+              <div className="space-y-4">
+                <Button 
+                  onClick={startSession} 
+                  disabled={loading}
+                  size="lg" 
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-8 py-3 rounded-full font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                      Connecting...
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="mr-2 h-5 w-5" />
+                      Start AI Conversation
+                    </>
+                  )}
+                </Button>
+                
+                {/* Show Generate Draft button if there's a conversation context */}
+                {conversationContext && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <p className="text-sm text-gray-600 mb-3">
+                      {conversationContext.messages.length > 0 
+                        ? "Previous conversation available" 
+                        : "Session ready for draft generation"}
+                    </p>
+                    <Button 
+                      onClick={exportConversationForDraft}
+                      variant="outline"
+                      className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 px-6 py-2 rounded-full font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
+                      disabled={loading}
+                    >
+                      Generate Project Draft
+                      {conversationContext.messages.length > 0 && (
+                        <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                          {conversationContext.messages.length} messages
+                        </span>
+                      )}
+                    </Button>
+                  </div>
                 )}
-              </Button>
+              </div>
             </div>
           ) : (
             /* Active Session View */
@@ -616,6 +642,44 @@ export default function ConversationalIntake() {
               {/* Text Input */}
               <UserInput onSend={sendUserMessage} disabled={loading} />
 
+              {/* Chat History - Beautifully styled message interface */}
+              <div className="mt-6 h-80 overflow-y-auto bg-gradient-to-b from-gray-50 to-white rounded-2xl border border-gray-200 shadow-inner" ref={chatMessagesRef}>
+                {conversationContext && conversationContext.messages.length > 0 ? (
+                  <div className="space-y-4 p-4">
+                    {conversationContext.messages.map((message, index) => (
+                      <div key={`${message.id}-${index}`} className={`flex ${
+                        message.role === 'user' ? 'justify-end' : 'justify-start'
+                      }`}>
+                        <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md ${
+                          message.role === 'user' 
+                            ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white' 
+                            : 'bg-white text-gray-800 border border-gray-200'
+                        }`}>
+                          <div className="text-sm leading-relaxed">{message.content}</div>
+                          <div className={`text-xs mt-2 flex items-center gap-2 ${
+                            message.role === 'user' ? 'text-blue-100' : 'text-gray-500'
+                          }`}>
+                            <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
+                            {message.type === 'audio' && <span className="text-xs">🎤</span>}
+                            {message.type === 'mixed' && <span className="text-xs">🎤💬</span>}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-500">
+                    <div className="text-center p-8">
+                      <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span className="text-2xl">💬</span>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-700 mb-2">Ready to Chat</h3>
+                      <p className="text-sm text-gray-500">Start typing or speaking to begin the conversation</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Session Controls */}
               <div className="mt-6 flex justify-center gap-4">
                 <Button 
@@ -638,28 +702,22 @@ export default function ConversationalIntake() {
                 </Button>
                 
                 {/* Export to Draft Button */}
-                {conversationContext && conversationContext.messages.length > 0 && (
+                {conversationContext && (
                   <Button 
                     onClick={exportConversationForDraft}
                     variant="outline"
-                    className="bg-white hover:bg-gray-50 border-gray-300"
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0 px-6 py-2 rounded-full font-medium shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
                     disabled={loading}
                   >
-                    Generate Project Draft ({conversationContext.messages.length} messages)
+                    Generate Project Draft
+                    {conversationContext.messages.length > 0 && (
+                      <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                        {conversationContext.messages.length} messages
+                      </span>
+                    )}
                   </Button>
                 )}
               </div>
-
-              {/* Debug Info - Show conversation state */}
-              {conversationContext && (
-                <div className="mt-4 p-3 bg-gray-100 rounded-lg text-xs text-gray-600">
-                  <div>Messages: {conversationContext.messages.length}</div>
-                  <div>Status: {conversationContext.status}</div>
-                  <div>Last message: {conversationContext.messages.length > 0 ? 
-                    conversationContext.messages[conversationContext.messages.length - 1].content.substring(0, 50) + '...' : 
-                    'None'}</div>
-                </div>
-              )}
             </div>
           )}
         </div>
