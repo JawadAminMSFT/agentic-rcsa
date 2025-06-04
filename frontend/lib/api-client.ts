@@ -138,9 +138,49 @@ export async function getSamples() {
   return fetchAPI("/samples")
 }
 
+export async function addSample(sample: any) {
+  return fetchAPI("/samples", {
+    method: "POST",
+    body: JSON.stringify(sample),
+  })
+}
+
+export async function updateSample(submissionId: string, sample: any) {
+  return fetchAPI(`/samples/${submissionId}`, {
+    method: "PUT",
+    body: JSON.stringify(sample),
+  })
+}
+
+export async function deleteSample(submissionId: string) {
+  return fetchAPI(`/samples/${submissionId}`, {
+    method: "DELETE",
+  })
+}
+
 // Guardrails API calls
 export async function getGuardrails() {
   return fetchAPI("/guardrails")
+}
+
+export async function addGuardrail(guardrail: any) {
+  return fetchAPI("/guardrails", {
+    method: "POST",
+    body: JSON.stringify(guardrail),
+  })
+}
+
+export async function updateGuardrail(guardrailId: string, guardrail: any) {
+  return fetchAPI(`/guardrails/${guardrailId}`, {
+    method: "PUT",
+    body: JSON.stringify(guardrail),
+  })
+}
+
+export async function deleteGuardrail(guardrailId: string) {
+  return fetchAPI(`/guardrails/${guardrailId}`, {
+    method: "DELETE",
+  })
 }
 
 // Update workflow context

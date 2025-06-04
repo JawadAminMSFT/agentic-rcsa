@@ -24,13 +24,22 @@ export async function getWorkflows({
         const title = workflowData.draft_submission?.project_title || "Untitled Project"
         const description = workflowData.project_description || ""
 
-        // Determine status based on workflow status
+        // Determine status based on decision result first, then workflow status
         let workflowStatus = "active"
-        if (workflowData.status === "completed") {
-          workflowStatus =
-            workflowData.decision_result?.decision?.toLowerCase() === "approved" ? "approved" : "rejected"
+
+        // Check if there's a decision result (approved/rejected)
+        if (workflowData.decision_result && workflowData.decision_result.decision) {
+          const decision = workflowData.decision_result.decision.toLowerCase()
+          if (decision === "approved") {
+            workflowStatus = "approved"
+          } else if (decision === "rejected") {
+            workflowStatus = "rejected"
+          }
         } else if (workflowData.status === "awaiting_feedback") {
           workflowStatus = "awaiting_feedback"
+        } else if (workflowData.status === "completed") {
+          // If completed but no decision, mark as completed
+          workflowStatus = "completed"
         }
 
         // Apply status filter

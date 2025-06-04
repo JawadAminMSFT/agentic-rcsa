@@ -6,6 +6,9 @@ import { getWorkflow, updateWorkflowContext } from "@/lib/api-client"
 import { WorkflowContext } from "@/lib/types"
 import WorkflowContextEditor from "@/components/workflow-context-editor"
 import { useToast } from "@/hooks/use-toast"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, Save, X } from "lucide-react"
+import Link from "next/link"
 
 export default function WorkflowEditPage() {
   const router = useRouter()
@@ -49,35 +52,119 @@ export default function WorkflowEditPage() {
     }
   }
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div className="text-red-500">{error}</div>
-  if (!context) return <div>Workflow context not found.</div>
+  if (loading) {
+    return (
+      <div className="min-h-screen p-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="glass-card rounded-2xl p-8 shadow-xl">
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              <div className="space-y-3">
+                <div className="h-4 bg-gray-200 rounded"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen p-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="glass-card rounded-2xl p-8 shadow-xl">
+            <div className="text-center space-y-4">
+              <div className="text-red-500 text-lg font-medium">{error}</div>
+              <Link href={`/workflows/${id}`}>
+                <Button variant="outline" className="rounded-xl">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Workflow
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!context) {
+    return (
+      <div className="min-h-screen p-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="glass-card rounded-2xl p-8 shadow-xl">
+            <div className="text-center space-y-4">
+              <div className="text-gray-500 text-lg">Workflow context not found.</div>
+              <Link href="/workflows">
+                <Button variant="outline" className="rounded-xl">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Workflows
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="max-w-3xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-4">Edit Workflow Context</h1>
-      <WorkflowContextEditor
-        context={context}
-        onSave={handleSave}
-        saving={saving}
-      />
-      <div className="flex gap-4 mt-6">
-        <button
-          type="submit"
-          className="px-6 py-2 rounded bg-blue-600 text-white font-medium hover:bg-blue-700 transition disabled:opacity-50"
-          onClick={() => document.querySelector('form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))}
-          disabled={saving}
-        >
-          {saving ? "Saving..." : "Save"}
-        </button>
-        <button
-          type="button"
-          className="px-6 py-2 rounded bg-black text-white font-medium hover:bg-neutral-800 transition disabled:opacity-50"
-          onClick={() => router.push(`/workflows/${id}`)}
-          disabled={saving}
-        >
-          Cancel
-        </button>
+    <div className="min-h-screen p-6">
+      <div className="container mx-auto max-w-4xl space-y-8">
+        {/* Header */}
+        <div className="glass-card rounded-2xl p-8 shadow-xl">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                Edit Workflow Context
+              </h1>
+              <p className="text-gray-600">
+                Modify workflow details and parameters
+              </p>
+            </div>
+            <Link href={`/workflows/${id}`}>
+              <Button variant="outline" className="rounded-xl border-gray-200 hover:bg-white/80 transition-all duration-300">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Workflow
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Editor */}
+        <div className="glass-card rounded-2xl p-8 shadow-xl">
+          <WorkflowContextEditor
+            context={context}
+            onSave={handleSave}
+            saving={saving}
+          />
+          
+          {/* Action Buttons */}
+          <div className="flex gap-4 mt-8 pt-6 border-t border-gray-200">
+            <button
+              type="submit"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              onClick={() => document.querySelector('form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))}
+              disabled={saving}
+            >
+              <Save className="h-4 w-4" />
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+            
+            <button
+              type="button"
+              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 disabled:opacity-50"
+              onClick={() => router.push(`/workflows/${id}`)}
+              disabled={saving}
+            >
+              <X className="h-4 w-4" />
+              Cancel
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )

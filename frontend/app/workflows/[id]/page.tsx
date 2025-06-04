@@ -1,4 +1,5 @@
 "use client"
+
 import { useEffect, useState } from "react"
 import WorkflowHeader from "@/components/workflow-header"
 import WorkflowSteps from "@/components/workflow-steps"
@@ -56,20 +57,26 @@ export default function WorkflowDetailPage() {
   }
 
   return (
-    <main className="container mx-auto py-8 px-4">
-      <WorkflowHeader
-        id={id}
-        title={workflowContext.draft_submission?.project_title || "Untitled Project"}
-        description={workflowContext.project_description}
-        status={displayStatus}
-      />
-      {/* Edit button under the header, right-aligned */}
-      <div className="mb-6 flex justify-end">
-        <Link href={`/workflows/${id}/edit`}>
-          <Button className="bg-black text-white hover:bg-neutral-800" variant="default" size="sm">Edit</Button>
-        </Link>
+    <div className="min-h-screen p-6">
+      <div className="container mx-auto max-w-7xl">
+        <WorkflowHeader
+          id={id}
+          title={workflowContext.draft_submission?.project_title || "Untitled Project"}
+          description={workflowContext.project_description}
+          status={displayStatus}
+        />
+        
+        {/* Edit button with modern styling */}
+        <div className="mb-8 flex justify-end">
+          <Link href={`/workflows/${id}/edit`}>
+            <Button className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-2 rounded-xl">
+              Edit Workflow
+            </Button>
+          </Link>
+        </div>
+        
+        <WorkflowSteps workflowContext={workflowContext} workflowId={id} />
       </div>
-      <WorkflowSteps workflowContext={workflowContext} workflowId={id} />
-    </main>
+    </div>
   )
 }
