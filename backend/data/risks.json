@@ -1,22 +1,834 @@
 [
-    {"id": "R1", "category": "Operational Risk",    "subrisk": "Process failure"},
-    {"id": "R2", "category": "Operational Risk",    "subrisk": "Third-party/vendor risk"},
-    {"id": "R3", "category": "Operational Risk",    "subrisk": "System outage"},
-    {"id": "R19", "category": "Operational Risk",   "subrisk": "Fraud/fraudulent claims"},
-    {"id": "R4", "category": "Compliance Risk",     "subrisk": "Regulatory non-compliance"},
-    {"id": "R5", "category": "Compliance Risk",     "subrisk": "Reporting errors"},
-    {"id": "R6", "category": "Credit Risk",         "subrisk": "Counterparty default"},
-    {"id": "R7", "category": "Credit Risk",         "subrisk": "Concentration exposure"},
-    {"id": "R8", "category": "Market Risk",         "subrisk": "Interest-rate shifts"},
-    {"id": "R9", "category": "Market Risk",         "subrisk": "FX rate volatility"},
-    {"id": "R10","category": "Liquidity Risk",      "subrisk": "Cash-flow mismatch"},
-    {"id": "R11","category": "Technology Risk",     "subrisk": "Cyberattack"},
-    {"id": "R12","category": "Technology Risk",     "subrisk": "Data integrity breach"},
-    {"id": "R20","category": "Technology Risk",     "subrisk": "Third-party API vulnerability"},
-    {"id": "R13","category": "Strategic Risk",      "subrisk": "New product misalignment"},
-    {"id": "R14","category": "Strategic Risk",      "subrisk": "Reputation damage"},
-    {"id": "R15","category": "Reputational Risk",   "subrisk": "Media backlash"},
-    {"id": "R16","category": "Conduct Risk",        "subrisk": "Insider trading"},
-    {"id": "R17","category": "ESG Risk",            "subrisk": "Environmental non-compliance"},
-    {"id": "R18","category": "ESG Risk",            "subrisk": "Social responsibility lapse"}
-]
+    {
+      "id": "R1",
+      "category_level_1": "Business Disruption, System Failure and Physical Assets Risk",
+      "category_level_2": "Loss of 50% Staff",
+      "category_level_3": "Loss of 50% Staff",
+      "risk_statement": "The risk of loss due to unavailability of critical staff of critical process resulting in a major disruption to one or more business operations.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R2",
+      "category_level_1": "Business Disruption, System Failure and Physical Assets Risk",
+      "category_level_2": "Loss of Critical Vendor",
+      "category_level_3": "Loss of Critical Vendor",
+      "risk_statement": "The risk of loss due to unavailability of critical vendor resulting in a major disruption to one or more business operations.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R3",
+      "category_level_1": "Business Disruption, System Failure and Physical Assets Risk",
+      "category_level_2": "Loss of Primary Building",
+      "category_level_3": "Loss of Primary Building",
+      "risk_statement": "The risk of loss due to unavailability of primary building resulting in a major disruption to one or more business operations.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R4",
+      "category_level_1": "Business Disruption, System Failure and Physical Assets Risk",
+      "category_level_2": "Loss of Systems Including Data Center",
+      "category_level_3": "Loss of Systems Including Data Center",
+      "risk_statement": "The risk of loss due to unavailability of critical systems resulting in a major disruption to one or more  business operations.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R5",
+      "category_level_1": "Business Disruption, System Failure and Physical Assets Risk",
+      "category_level_2": "Theft of or Damage to Physical Assets",
+      "category_level_3": "Theft of or Damage to Physical Assets",
+      "risk_statement": "The risk of theft of or damage to physical assets (equipment/devices).",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R6",
+      "category_level_1": "Change Management Risk",
+      "category_level_2": "Acquisitions/Mergers/Divestitures",
+      "category_level_3": "Acquisitions / Mergers / Divestitures",
+      "risk_statement": "The risk of failure to plan, execute, manage or monitor an A/M/D, including: deal rationale, underestimating the impact/work required to integrate the A/M/D, not taking appropriate actions to ensure the A/M/D is successful, missing 'skeletons' during due diligence, and people, process or technology errors within the early stage handling, transaction (Rounds 1 - 3), and post-close processes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R7",
+      "category_level_1": "Change Management Risk",
+      "category_level_2": "Change Initiatives, Project/Programs Management",
+      "category_level_3": "Change Initiatives, Project/Programs Management",
+      "risk_statement": "The risk of failure to plan, execute, manage or monitor a project/program to the approved scope/quality, timeline and budget and manage the risks associated with changes to existing people, processes and systems.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R8",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Financial Crimes Risks",
+      "category_level_3": "Anti-Bribery / Anti-Corruption",
+      "risk_statement": "The risk of non-compliance with regulatory requirements pertaining to financial crimes. ",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R9",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Investment Compliance",
+      "category_level_3": "Compliance with Investment Guidelines/Investment Management Agreements",
+      "risk_statement": "The risk of non-compliance with regulatory requirements which outline expectations and principles with respect to the management of investment compliance risk.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R10",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Legal",
+      "category_level_3": "Contractual rights/obligation failures",
+      "risk_statement": "The risk of misinterpretation or misunderstanding of the law resulting in non-conformance.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R11",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Privacy",
+      "category_level_3": "Collection, use, disclosure and retention",
+      "risk_statement": "The risk of potential loss, breach, or mismanagement of Company managed data, which includes but is not restricted to Personally Identifiable Information.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R12",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Regulatory Compliance and Code of Conduct",
+      "category_level_3": "Complaints Management",
+      "risk_statement": "The risk of non-compliance with regulatory and company requirements which outline expectations and principles with respect to the management of regulatory compliance and code of conduct risk.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R13",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Sales and Distribution Compliance",
+      "category_level_3": "Anti-Discrimination",
+      "risk_statement": "The risk of non-compliance with business practices, or violations of regulatory requirements related to sales and distribution practices. ",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R14",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Accounting Policy",
+      "category_level_3": "Accounting Policy",
+      "risk_statement": "Risk of misinterpreting accounting policies, resulting in misstatements.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R15",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Actuarial reserves and calculations",
+      "category_level_3": "Actuarial reserves and calculations",
+      "risk_statement": "Risk events related to errors in actuarial calculations or processes resulting in financial losses, fines and/or penalties.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R16",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Earnings Forecast",
+      "category_level_3": "Earnings Forecast",
+      "risk_statement": "Risk of misstatements in financial earnings forecasts that may adversely impact financial reporting analytics and related business decisions.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R17",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Internal and External Reporting Errors",
+      "category_level_3": "External Reporting (excluding SOX and MAR compliance)",
+      "risk_statement": "The risk of failure to prepare complete and accurate financials for regulatory, statutory and internal management reporting, which may result in restatement, if considered material.  Filing of statutory or regulatory documents late or not in compliance with regulatory guidelines, which may result in refiling and/or penalties. ",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R18",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Model Building / Maintenance Errors",
+      "category_level_3": "End User Computing",
+      "risk_statement": "The risk of inappropriate use or interpretation of models (both within applications or internally built) or their output, or the use of deficient models, data or assumptions for business decisions and/or regulatory/statutory reporting. Risk that EUCs (including spreadsheets, databases, queries, scripts, or output from various reporting tools) are not properly created or maintained by business unit owners and/or are incorrectly monitored/validated when embedded within business unit processes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R19",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Tax Management Risks",
+      "category_level_3": "Tax Accounting",
+      "risk_statement": "Risk of failing to file accounting statements in accordance with the appropriate tax standards or to abide by the appropriate tax treaties for the country; Errors in applying tax laws and regulations related to business decisions and complex transactions; Failure to accurately prepare and complete tax returns and satisfactorily respond to enquiries from tax authorities. comply with tax policies, errors in manual spreadsheets, failure to incorporate changes in tax law into internal processes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R20",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Valuation / Impairments",
+      "category_level_3": "Valuation / Impairments",
+      "risk_statement": "Assets are not valued and/or impaired accurately, completely, timely, and/or in compliance with Company standards and regulatory requirements.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R21",
+      "category_level_1": "Fraud Risk",
+      "category_level_2": "External Fraud",
+      "category_level_3": "External Fraud \u2013 ATO",
+      "risk_statement": "Risk events resulting from an act or course of deception, an intentional concealment, omission, or perversion of truth, to: (1) gain unlawful or unfair advantage, (2) induce another to part with some valuable item or surrender a legal right, or (3) inflict injury in some manner.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R22",
+      "category_level_1": "Fraud Risk",
+      "category_level_2": "Internal Fraud",
+      "category_level_3": "Internal Fraud - Financial Information and Reporting Misstatement",
+      "risk_statement": "Risk events resulting from acts of a type intended to defraud, misappropriate property or circumvent regulations, the law or company policy, excluding diversity/discrimination events, which involves at least one internal party. Includes insider trading.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R23",
+      "category_level_1": "Human Resources Risk",
+      "category_level_2": "On premise safety, mental health, physical security and accessibility",
+      "category_level_3": "Accessibility",
+      "risk_statement": "The risk of failure to ensure the health and safety of, and accessibility for, employees, clients and others. ",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R24",
+      "category_level_1": "Human Resources Risk",
+      "category_level_2": "Talent Acquisition and Retention",
+      "category_level_3": "Hiring Capacity and Talent Attraction",
+      "risk_statement": "The risk of loss resulting from inadequate management and insufficient recruitment and retention of high-performance talent impairing the ability to meet company objectives and strategic goals.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R25",
+      "category_level_1": "Human Resources Risk",
+      "category_level_2": "Talent, Learning and Leadership",
+      "category_level_3": "Performance Management",
+      "risk_statement": "The risk of failing to provide talent development, adequate performance management, as well as learning and leadership opportunities to employees that align with strategic goals.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R26",
+      "category_level_1": "Human Resources Risk",
+      "category_level_2": "Total Rewards",
+      "category_level_3": " Pension and Benefits",
+      "risk_statement": "The risk of poorly designed rewards programs that do not align with employees and with the strategic goals of the company.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R27",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Availability Risk",
+      "category_level_3": "Unavailability of Information",
+      "risk_statement": "Risk that the information and/or associated assets may not be available when required/needed.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R28",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Confidentiality Risk",
+      "category_level_3": "Inadequate Information Security Practices",
+      "risk_statement": "A risk that the information's confidentiality is not based on \"Need to Know\"  resulting in unauthorized access to the Information Assets",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R29",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Integrity Risk",
+      "category_level_3": "Unauthorized modification of Information/System - External",
+      "risk_statement": "Risk that the information is not complete or error free.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R30",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Repudiation Risk",
+      "category_level_3": "Repudiation Risk",
+      "risk_statement": "The assurance that a party cannot later deny originating data; provision of proof of the integrity and origin of the data and that can be verified by a third party.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R31",
+      "category_level_1": "Marketing & Communications Risk",
+      "category_level_2": "Communications Risks",
+      "category_level_3": "External Communications/ Media Relations ",
+      "risk_statement": "The risks related to the use of social media; not engaging the communications team regarding incidents/events that warrant Communications involvement; errors in communications messaging that is distributed internally as well as the risk of exposure to customers and their information, and to the company through fraudulent or hijacked corporate presence online resulting in customer backlash/adverse legal actions; employee posting of inappropriate pictures or information that links them to the company; errors in internal or external communications, including public relations crisis, marketing creative off strategy - all of which may result in damage to the company's brand/reputation, negatively impact customers; negatively impact Manulife stock. The risk of failure to design, implement, maintain, and manage our products, or the failure to document product changes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R32",
+      "category_level_1": "Marketing & Communications Risk",
+      "category_level_2": "Marketing Risks",
+      "category_level_3": "Marketing Materials",
+      "risk_statement": "Risk events associated with the design, production, distribution and effectiveness of marketing material though any medium produced for clients and target customers.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R33",
+      "category_level_1": "Product Management Operational Risk",
+      "category_level_2": "Administration of Product Features",
+      "category_level_3": "Administration of Product Features",
+      "risk_statement": "Products are not administered as designed and/or sold. This does not include discontinued products.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R34",
+      "category_level_1": "Product Management Operational Risk",
+      "category_level_2": "Client Offerings",
+      "category_level_3": "Client Offerings",
+      "risk_statement": "Implemented client offerings/products do not align with intended design.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R35",
+      "category_level_1": "Product Management Operational Risk",
+      "category_level_2": "Discontinued Products",
+      "category_level_3": "Discontinued Products",
+      "risk_statement": "Discontinued products administrative process and/or systems are not maintained.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R36",
+      "category_level_1": "Product Management Operational Risk",
+      "category_level_2": "Post Implementation Product Management (non administration)",
+      "category_level_3": "Post Implementation Product Management (non administration)",
+      "risk_statement": "Products are not adequately managed after implementation, such as deferred development, revising product features or pricing, ongoing viability of product. The risk of failing to properly manage our products in line with policies and procedures.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R37",
+      "category_level_1": "Product Management Operational Risk",
+      "category_level_2": "Product Design",
+      "category_level_3": "Product Design",
+      "risk_statement": "Product is designed without considering profitability, feasibility, market acceptance, suitability, and/or potential conflicts.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R38",
+      "category_level_1": "Product Management Operational Risk",
+      "category_level_2": "Product Implementation",
+      "category_level_3": "Product Implementation",
+      "risk_statement": "Any aspect of product development/implementation is missing incomplete, inaccurate or delayed.  Examples include: product is not valued, analyzed, set up completely or accurately in systems and operations, and/or accurate materials are not provided to distributors or clients.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R39",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "IT Delivery Risk",
+      "category_level_3": "Lack of Ease of Use of Information",
+      "risk_statement": "Risk that business objectives may not be achieved due to IT Systems and Services not being able to perform/deliver value up to the desired level, resulting in dissatisfaction for the intended customers (internal and/or external).",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R40",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Technology Asset and Configuration Management Risk",
+      "category_level_3": "Technology Asset Management",
+      "risk_statement": "Risk of not maintaining an accurate or complete inventory of technology assets leading to lack of understanding the software and hardware estate. ",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R41",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Technology Change Management Risk",
+      "category_level_3": "Technology Change",
+      "risk_statement": "Risk that any change in IT Assets, baseline configurations and relevant IT environment/ecosystem  are not tracked, reviewed, updated, authorized and approved through a formal process.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R42",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Technology Strategy Risk",
+      "category_level_3": "Misalignment of Technology Strategy to Business",
+      "risk_statement": "Risk that IT Systems, Solutions or Services may not be able to align with business strategy, thus not enabling business to achieve its objectives.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R43",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Unreliable Technology Systems, Solutions or Services",
+      "category_level_3": "Failure in Technology Operations",
+      "risk_statement": "Risk of not maintaining the appropriate level of technology operations, performance and capacity of the information systems that process, transport and store the information.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R44",
+      "category_level_1": "Third Party Risk",
+      "category_level_2": "Contract or Contracting Process Gaps",
+      "category_level_3": " Vendor Selection",
+      "risk_statement": "The risk of having the engagement omitting adequate and robust legally binding clauses to ensure adequate leverage in the event a situation arises. The risk of having process gaps within the contracting lifecycle.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R45",
+      "category_level_1": "Third Party Risk",
+      "category_level_2": "Third Party Delivery Risks",
+      "category_level_3": " Broker Dealer Governance",
+      "risk_statement": "The risk to employees and customer data, financial information and operations from inadequate third-party delivery management.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R46",
+      "category_level_1": "Third Party Risk",
+      "category_level_2": "Third Party Information Security Risk",
+      "category_level_3": "Inadequate Information Security Practices",
+      "risk_statement": "Ineffective processes to manage third parties\u2019 services (including people, process, and technology) and the confidentiality and availability of business information they store, and process may result in risks outside our risk appetite.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R47",
+      "category_level_1": "Transaction Processing Risk",
+      "category_level_2": " Operations",
+      "category_level_3": "Client Accommodation",
+      "risk_statement": "Risks associated with the inadequate or failed processes supporting the day to day operations of the Company, including acquisition and servicing of account.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R48",
+      "category_level_1": "Transaction Processing Risk",
+      "category_level_2": "Claims Management Risks",
+      "category_level_3": "Claims Adjudication ",
+      "risk_statement": "The risk of claims process failure, claims payment errors or failure in manage retained asset accounts in accordance with regulatory requirements.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R49",
+      "category_level_1": "Transaction Processing Risk",
+      "category_level_2": "Customer Intake/ Onboarding Risks",
+      "category_level_3": "New Account Set-Up Failure",
+      "risk_statement": "The risk of failing to record and report on new business accurately and completely.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R50",
+      "category_level_1": "Transaction Processing Risk",
+      "category_level_2": "Trading",
+      "category_level_3": " Deliberate Misrepresentation of Positions",
+      "risk_statement": "Risk associated with trading activity.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R51",
+      "category_level_1": "Strategy",
+      "category_level_2": "Climate",
+      "category_level_3": "Climate",
+      "risk_statement": "Risk of loss, either directly through financial loss or indirectly through reputational damage, resulting from the inability or failure to adequately prepare for the impacts from climate change or the transition to a lower-carbon economy.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R52",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Unreliable Technology Systems, Solutions or Services",
+      "category_level_3": "Failure in Technology Operations",
+      "risk_statement": "The risk of limiting, impairing or disrupting business activities due to failure or inadequacy of key Treasury applications and technology impacting Manulife from operational, customer, financial and reputational perspectives.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R53",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Privacy",
+      "category_level_3": "Collection, use, disclosure and retention",
+      "risk_statement": "Risk of Treasury Operations employees maintaining, accessing or sharing Personal Identifiable Information in a manner not aligned with applicable privacy laws and regulations impacting Manulife from a regulatory perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R54",
+      "category_level_1": "Human Resources Risk",
+      "category_level_2": "Talent Acquisition and Retention",
+      "category_level_3": "Talent Retention",
+      "risk_statement": "Risk of loss of Treasury Operations institutional knowledge due to staff turnover resulting in the inability to meet current and future business needs as well as strategic objectives impacting Manulife from an operational perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R55",
+      "category_level_1": "Transaction Processing Risk",
+      "category_level_2": " Operations",
+      "category_level_3": "Unauthorized Transactions",
+      "risk_statement": "Transaction risk due to inappropriate or erroneous authorization caused by inappropriate system access or approver authorization setup impacting Manulife from financial and reputational perspectives ",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R56",
+      "category_level_1": "Transaction Processing Risk",
+      "category_level_2": " Operations",
+      "category_level_3": "Transactions Processing",
+      "risk_statement": "Risk of transactions not received, processed and/or recorded completely, accurately or timely due to operational issues or processing errors, impacting Manulife from financial and reputational perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R57",
+      "category_level_1": "Fraud Risk",
+      "category_level_2": "External Fraud",
+      "category_level_3": "External Fraud-Other",
+      "risk_statement": "The risk of fraud by AP Vendors due to an illegitimate AP Vendor setup request or invoice payment processed by Treasury impacting Manulife from financial loss perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R58",
+      "category_level_1": "Change Management Risk",
+      "category_level_2": "Change Initiatives, Project/Programs Management",
+      "category_level_3": "Change Initiatives, Project/Programs Management",
+      "risk_statement": "Risk of not staying within the scope (Resource constraint) of various key projects including Treasury Operations Application Modernization program, Treasury Payment Hub initiative, INFOR platform rollout to Asia and other Treasury transformation initiatives impacting Manulife from an operational perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R59",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Internal and External Reporting Errors",
+      "category_level_3": "Internal/ Management Reporting",
+      "risk_statement": "Significant errors in balances recorded",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R60",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Internal and External Reporting Errors",
+      "category_level_3": "Internal/ Management Reporting",
+      "risk_statement": "The risk of financial misstatement of operational cash balances as a result of the cash accounting activities within Treasury Operations impacting Manulife from a financial reporting perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R61",
+      "category_level_1": "Change Management Risk",
+      "category_level_2": "Change Initiatives, Project/Programs Management",
+      "category_level_3": "Change Initiatives, Project/Programs Management",
+      "risk_statement": "The risk of failure to plan, execute or manage internal change initiatives and manage the risks associated with changes to existing systems, processes and people",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R62",
+      "category_level_1": "Third Party Risk",
+      "category_level_2": "Third Party Delivery Risks",
+      "category_level_3": "Third Party Monitoring",
+      "risk_statement": "Risk that proper oversight and review of key vendors is not taking place, caused by lack of resources impacting Manulife from a Compliance and Operational standpoint. ",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R63",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Financial Crimes Risks",
+      "category_level_3": "Anti-Money Laundering and Anti-Terrorist Financing (including Sanctions)",
+      "risk_statement": "The risk of Treasury Operations failing to comply with money laundering and terrorist financing requirements as pertains to Treasury banking relationships and INFOR AP Vendors impacting Manulife from a regulatory perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R64",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Confidentiality Risk",
+      "category_level_3": "Unauthorized Access - Internal",
+      "risk_statement": "Risk of unauthorized access to Treasury Operations systems and data caused by failure in Security Administration processes impacting Manulife from financial, reputational and regulatory perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R65",
+      "category_level_1": "Business Disruption, System Failure and Physical Assets Risk",
+      "category_level_2": "Loss of Critical Vendor",
+      "category_level_3": "Loss of Critical Vendor",
+      "risk_statement": "Risk of significant outage of multiple Treasury processes caused by unavailability of Treasury's critical vendors (INFOR ERP and KYRIBA Treasury Management System) from operational, customer, financial, regulatory/legal and reputational perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R66",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Technology Strategy Risk",
+      "category_level_3": "Misalignment of Technology Strategy to Business",
+      "risk_statement": "Risk of failure to deliver payment solutions that meet BU expectations and industry standards (ISO and NACHA), due to misalignment of BU and Technology strategies, impacting Manulife from operational, financial and reputational perspective",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R67",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Model Building / Maintenance Errors",
+      "category_level_3": "Model Building, Implementation or Maintenance",
+      "risk_statement": "Risk that EUCs are not maintained and/or validation checks are not consistently completed to ensure that data models are providing accurate output resulting in decisions made on invalid information which may lead to negative financial, reputational, legal or regulatory impacts.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R68",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Regulatory Compliance and Code of Conduct",
+      "category_level_3": "Record Retention",
+      "risk_statement": "The risk that records, including highly confidential or confidential company/ financial information, are not managed in accordance with the company's Records Management Policy and related department procedures which may lead to negative regulatory impacts.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R69",
+      "category_level_1": "Human Resources Risk",
+      "category_level_2": "Knowledge Management",
+      "category_level_3": "Key Person Dependency",
+      "risk_statement": "The risk of loss of critical knowledge or disruption of operations due to insufficient cross-training or over-reliance on specific individuals.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R70",
+      "category_level_1": "Human Resources Risk",
+      "category_level_2": "Succession Planning",
+      "category_level_3": "Leadership Pipeline",
+      "risk_statement": "The risk of inadequate succession planning leading to leadership gaps and business disruption.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R71",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Reconciliation Risk",
+      "category_level_3": "Bank Reconciliation Failure",
+      "risk_statement": "The risk of errors or delays in bank reconciliation processes resulting in inaccurate financial reporting or undetected fraud.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R72",
+      "category_level_1": "Payments Risk",
+      "category_level_2": "Authorization Risk",
+      "category_level_3": "Unauthorized Payments",
+      "risk_statement": "The risk of unauthorized or inaccurate payments due to inadequate approval or verification processes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R73",
+      "category_level_1": "Payments Risk",
+      "category_level_2": "Segregation of Duties",
+      "category_level_3": "Control Bypass",
+      "risk_statement": "The risk of control failures or fraud due to lack of segregation of duties in payment processing systems.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R74",
+      "category_level_1": "Policy & Compliance Risk",
+      "category_level_2": "Policy Management",
+      "category_level_3": "Policy Non-Compliance",
+      "risk_statement": "The risk of non-compliance with internal policies and procedures due to lack of awareness, training, or documentation.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R75",
+      "category_level_1": "Cash Management Risk",
+      "category_level_2": "Account Monitoring",
+      "category_level_3": "Balance & Overdraft Monitoring",
+      "risk_statement": "The risk of financial loss due to inadequate monitoring of account balances, credit limits, or overdrafts.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R76",
+      "category_level_1": "Vendor Management Risk",
+      "category_level_2": "Vendor Setup",
+      "category_level_3": "Vendor Due Diligence",
+      "risk_statement": "The risk of errors or fraud in vendor setup due to insufficient due diligence or approval processes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R77",
+      "category_level_1": "Project Management Risk",
+      "category_level_2": "Project Monitoring",
+      "category_level_3": "Project Status Tracking",
+      "risk_statement": "The risk of project delays, cost overruns, or failures due to inadequate monitoring of project status, resources, or dependencies.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R78",
+      "category_level_1": "Project Management Risk",
+      "category_level_2": "Project Planning",
+      "category_level_3": "Resource Planning",
+      "risk_statement": "The risk of project failure due to inadequate planning, resource allocation, or scope definition.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R79",
+      "category_level_1": "Project Management Risk",
+      "category_level_2": "Project Reporting",
+      "category_level_3": "Project Communication",
+      "risk_statement": "The risk of poor project outcomes due to lack of timely and accurate reporting to stakeholders.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R80",
+      "category_level_1": "Cash Management Risk",
+      "category_level_2": "Reconciliation Risk",
+      "category_level_3": "Suspense Account Management",
+      "risk_statement": "The risk of financial misstatement or fraud due to inadequate management of suspense accounts.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R81",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Service Level Management",
+      "category_level_3": "Service Level Failure",
+      "risk_statement": "The risk of business disruption or degraded performance due to failure to meet agreed service levels for critical applications or systems.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R82",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Industry Standards Compliance",
+      "category_level_3": "Non-Compliance with Industry Standards",
+      "risk_statement": "The risk of regulatory penalties, reputational damage, or operational inefficiency due to non-compliance with industry standards or best practices.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R83",
+      "category_level_1": "Operational Risk",
+      "category_level_2": "Issue Management",
+      "category_level_3": "Unresolved Production Issues",
+      "risk_statement": "The risk of operational loss or business disruption due to unresolved or recurring production issues.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R84",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Regulatory Reporting",
+      "category_level_3": "Inaccurate or Late Reporting",
+      "risk_statement": "The risk of regulatory penalties or reputational damage due to inaccurate or late compliance reporting.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R85",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Training and Awareness",
+      "category_level_3": "Insufficient Compliance Training",
+      "risk_statement": "The risk of non-compliance or regulatory breaches due to insufficient or ineffective compliance training for staff.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R86",
+      "category_level_1": "Operational Risk",
+      "category_level_2": "Resource Management",
+      "category_level_3": "Inadequate Resource Assessment",
+      "risk_statement": "The risk of business disruption or inefficiency due to inadequate assessment and allocation of resources for business-as-usual operations.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R87",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "Policy Attestation",
+      "category_level_3": "Non-Compliance with Policy Attestation",
+      "risk_statement": "The risk of regulatory or internal policy breaches due to lack of attestation or quality assurance for policy compliance.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R88",
+      "category_level_1": "Operational Risk",
+      "category_level_2": "Customer Service",
+      "category_level_3": "Unresolved Inquiries or Issues",
+      "risk_statement": "The risk of customer dissatisfaction or operational inefficiency due to unresolved inquiries or issues from business units.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R89",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Data Feed Management",
+      "category_level_3": "Feed Failure or Delay",
+      "risk_statement": "The risk of financial loss or operational disruption due to failure or delay in processing critical data feeds.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R90",
+      "category_level_1": "Payments Risk",
+      "category_level_2": "Payment Authorization",
+      "category_level_3": "Lack of Independent Review",
+      "risk_statement": "The risk of unauthorized or erroneous payments due to lack of independent review and approval of payment activities.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R91",
+      "category_level_1": "Financial Management & Reporting Risk",
+      "category_level_2": "Reconciliation Risk",
+      "category_level_3": "Sub-Ledger to GL Reconciliation Failure",
+      "risk_statement": "The risk of financial misstatement or undetected errors due to inadequate reconciliation between sub-ledgers and the general ledger.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R92",
+      "category_level_1": "Technology Risk",
+      "category_level_2": "Data Feed Management",
+      "category_level_3": "Feed Failure or Delay",
+      "risk_statement": "The risk of financial loss or operational disruption due to failure or delay in processing critical data feeds (TCS).",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R93",
+      "category_level_1": "Procurement Risk",
+      "category_level_2": "Invoice Matching",
+      "category_level_3": "Invoice/Contract Discrepancy",
+      "risk_statement": "The risk of financial loss or fraud due to discrepancies between invoices, contracts, and goods/services delivered.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R94",
+      "category_level_1": "Change Management Risk",
+      "category_level_2": "Change Management Engagement",
+      "category_level_3": "Lack of Early Engagement",
+      "risk_statement": "The risk of project failure or business disruption due to lack of early engagement of key teams in change management initiatives.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R95",
+      "category_level_1": "Vendor Management Risk",
+      "category_level_2": "Vendor Performance Monitoring",
+      "category_level_3": "Unmonitored Vendor Performance",
+      "risk_statement": "The risk of financial loss or operational disruption due to inadequate monitoring of bank and vendor performance.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R96",
+      "category_level_1": "Vendor Management Risk",
+      "category_level_2": "Outsourcing Compliance",
+      "category_level_3": "Non-Compliance with Outsourcing Policy",
+      "risk_statement": "The risk of regulatory or operational issues due to non-compliance with outsourcing and vendor risk management policies.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R97",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "AML/ATF Compliance",
+      "category_level_3": "Missed AML/ATF Scanning",
+      "risk_statement": "The risk of regulatory penalties or financial crime due to missed or inadequate AML/ATF scanning of vendors.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R98",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "AML/ATF Compliance",
+      "category_level_3": "Insufficient Due Diligence",
+      "risk_statement": "The risk of regulatory penalties or financial crime due to insufficient due diligence on institutions or vendors for AML/ATF compliance.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R99",
+      "category_level_1": "Compliance and Legal Risk",
+      "category_level_2": "AML/ATF Compliance",
+      "category_level_3": "Missed AML/ATF Scanning",
+      "risk_statement": "The risk of regulatory penalties or financial crime due to missed or inadequate AML/ATF scanning of new or changed vendors.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R100",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Access Management",
+      "category_level_3": "Inadequate Access Request Process",
+      "risk_statement": "The risk of unauthorized access or privilege escalation due to inadequate access request initiation and approval processes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R101",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Access Management",
+      "category_level_3": "Inadequate Access Administration",
+      "risk_statement": "The risk of unauthorized access or privilege escalation due to inadequate access approval and administration processes.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R102",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Access Management",
+      "category_level_3": "Inadequate Transfer Reconciliation",
+      "risk_statement": "The risk of unauthorized access or privilege escalation due to inadequate reconciliation of user transfers.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R103",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Access Management",
+      "category_level_3": "Inadequate Role Review",
+      "risk_statement": "The risk of unauthorized access or privilege escalation due to inadequate review of application roles and entitlements.",
+      "principal_risk_bucket": "Operational Risk"
+    },
+    {
+      "id": "R104",
+      "category_level_1": "Information Security Risk",
+      "category_level_2": "Access Management",
+      "category_level_3": "Inadequate User Access Review",
+      "risk_statement": "The risk of unauthorized access or privilege escalation due to inadequate review of user access and entitlements.",
+      "principal_risk_bucket": "Operational Risk"
+    }
+  ]

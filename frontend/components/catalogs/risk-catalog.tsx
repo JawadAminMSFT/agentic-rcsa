@@ -14,9 +14,11 @@ import { AlertCircle, Plus, Edit } from "lucide-react"
 
 interface Risk {
   id: string
-  category: string
-  subrisk?: string
-  description?: string
+  category_level_1: string
+  category_level_2: string
+  category_level_3: string
+  risk_statement: string
+  principal_risk_bucket: string
 }
 
 export default function RiskCatalog() {
@@ -28,9 +30,11 @@ export default function RiskCatalog() {
   const [editingRisk, setEditingRisk] = useState<Risk | null>(null)
   const [formData, setFormData] = useState({
     id: "",
-    category: "",
-    subrisk: "",
-    description: ""
+    category_level_1: "",
+    category_level_2: "",
+    category_level_3: "",
+    risk_statement: "",
+    principal_risk_bucket: ""
   })
 
   useEffect(() => {
@@ -50,7 +54,7 @@ export default function RiskCatalog() {
   }, [])
 
   const handleAddRisk = () => {
-    setFormData({ id: "", category: "", subrisk: "", description: "" })
+    setFormData({ id: "", category_level_1: "", category_level_2: "", category_level_3: "", risk_statement: "", principal_risk_bucket: "" })
     setIsAddDialogOpen(true)
   }
 
@@ -58,9 +62,11 @@ export default function RiskCatalog() {
     setEditingRisk(risk)
     setFormData({
       id: risk.id,
-      category: risk.category,
-      subrisk: risk.subrisk || "",
-      description: risk.description || ""
+      category_level_1: risk.category_level_1,
+      category_level_2: risk.category_level_2,
+      category_level_3: risk.category_level_3,
+      risk_statement: risk.risk_statement,
+      principal_risk_bucket: risk.principal_risk_bucket
     })
     setIsEditDialogOpen(true)
   }
@@ -85,7 +91,7 @@ export default function RiskCatalog() {
         setIsAddDialogOpen(false)
       }
       
-      setFormData({ id: "", category: "", subrisk: "", description: "" })
+      setFormData({ id: "", category_level_1: "", category_level_2: "", category_level_3: "", risk_statement: "", principal_risk_bucket: "" })
     } catch (err) {
       console.error("Failed to save risk:", err)
       setError("Failed to save risk. Please try again.")
@@ -144,37 +150,59 @@ export default function RiskCatalog() {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category" className="text-right text-sm">
-                  Category
+                <Label htmlFor="category_level_1" className="text-right text-sm">
+                  Category Level 1
                 </Label>
                 <Input
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) => handleFormChange("category", e.target.value)}
+                  id="category_level_1"
+                  value={formData.category_level_1}
+                  onChange={(e) => handleFormChange("category_level_1", e.target.value)}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="subrisk" className="text-right text-sm">
-                  Subrisk
+                <Label htmlFor="category_level_2" className="text-right text-sm">
+                  Category Level 2
                 </Label>
                 <Input
-                  id="subrisk"
-                  value={formData.subrisk}
-                  onChange={(e) => handleFormChange("subrisk", e.target.value)}
+                  id="category_level_2"
+                  value={formData.category_level_2}
+                  onChange={(e) => handleFormChange("category_level_2", e.target.value)}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right text-sm">
-                  Description
+                <Label htmlFor="category_level_3" className="text-right text-sm">
+                  Category Level 3
+                </Label>
+                <Input
+                  id="category_level_3"
+                  value={formData.category_level_3}
+                  onChange={(e) => handleFormChange("category_level_3", e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="risk_statement" className="text-right text-sm">
+                  Risk Statement
                 </Label>
                 <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleFormChange("description", e.target.value)}
+                  id="risk_statement"
+                  value={formData.risk_statement}
+                  onChange={(e) => handleFormChange("risk_statement", e.target.value)}
                   className="col-span-3"
                   rows={3}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="principal_risk_bucket" className="text-right text-sm">
+                  Principal Risk Bucket
+                </Label>
+                <Input
+                  id="principal_risk_bucket"
+                  value={formData.principal_risk_bucket}
+                  onChange={(e) => handleFormChange("principal_risk_bucket", e.target.value)}
+                  className="col-span-3"
                 />
               </div>
             </div>
@@ -196,8 +224,10 @@ export default function RiskCatalog() {
             <TableHeader>
               <TableRow className="border-gray-200">
                 <TableHead className="text-gray-700 font-medium">ID</TableHead>
-                <TableHead className="text-gray-700 font-medium">Category</TableHead>
-                <TableHead className="text-gray-700 font-medium">Subrisk</TableHead>
+                <TableHead className="text-gray-700 font-medium">Category Level 1</TableHead>
+                <TableHead className="text-gray-700 font-medium">Category Level 2</TableHead>
+                <TableHead className="text-gray-700 font-medium">Category Level 3</TableHead>
+                <TableHead className="text-gray-700 font-medium">Risk Statement</TableHead>
                 <TableHead className="text-right text-gray-700 font-medium">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -205,8 +235,10 @@ export default function RiskCatalog() {
               {risks.map((risk: Risk) => (
                 <TableRow key={risk.id} className="border-gray-200 hover:bg-gray-50">
                   <TableCell className="font-medium text-gray-900">{risk.id}</TableCell>
-                  <TableCell className="text-gray-700">{risk.category}</TableCell>
-                  <TableCell className="text-gray-700">{risk.subrisk || <span className="text-gray-400">-</span>}</TableCell>
+                  <TableCell className="text-gray-700">{risk.category_level_1}</TableCell>
+                  <TableCell className="text-gray-700">{risk.category_level_2 || <span className="text-gray-400">-</span>}</TableCell>
+                  <TableCell className="text-gray-700">{risk.category_level_3 || <span className="text-gray-400">-</span>}</TableCell>
+                  <TableCell className="text-gray-700">{risk.risk_statement}</TableCell>
                   <TableCell className="text-right">
                     <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                       <DialogTrigger asChild>
@@ -240,37 +272,59 @@ export default function RiskCatalog() {
                             />
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="edit-category" className="text-right text-sm">
-                              Category
+                            <Label htmlFor="edit-category_level_1" className="text-right text-sm">
+                              Category Level 1
                             </Label>
                             <Input
-                              id="edit-category"
-                              value={formData.category}
-                              onChange={(e) => handleFormChange("category", e.target.value)}
+                              id="edit-category_level_1"
+                              value={formData.category_level_1}
+                              onChange={(e) => handleFormChange("category_level_1", e.target.value)}
                               className="col-span-3"
                             />
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="edit-subrisk" className="text-right text-sm">
-                              Subrisk
+                            <Label htmlFor="edit-category_level_2" className="text-right text-sm">
+                              Category Level 2
                             </Label>
                             <Input
-                              id="edit-subrisk"
-                              value={formData.subrisk}
-                              onChange={(e) => handleFormChange("subrisk", e.target.value)}
+                              id="edit-category_level_2"
+                              value={formData.category_level_2}
+                              onChange={(e) => handleFormChange("category_level_2", e.target.value)}
                               className="col-span-3"
                             />
                           </div>
                           <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="edit-description" className="text-right text-sm">
-                              Description
+                            <Label htmlFor="edit-category_level_3" className="text-right text-sm">
+                              Category Level 3
+                            </Label>
+                            <Input
+                              id="edit-category_level_3"
+                              value={formData.category_level_3}
+                              onChange={(e) => handleFormChange("category_level_3", e.target.value)}
+                              className="col-span-3"
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="edit-risk_statement" className="text-right text-sm">
+                              Risk Statement
                             </Label>
                             <Textarea
-                              id="edit-description"
-                              value={formData.description}
-                              onChange={(e) => handleFormChange("description", e.target.value)}
+                              id="edit-risk_statement"
+                              value={formData.risk_statement}
+                              onChange={(e) => handleFormChange("risk_statement", e.target.value)}
                               className="col-span-3"
                               rows={3}
+                            />
+                          </div>
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="edit-principal_risk_bucket" className="text-right text-sm">
+                              Principal Risk Bucket
+                            </Label>
+                            <Input
+                              id="edit-principal_risk_bucket"
+                              value={formData.principal_risk_bucket}
+                              onChange={(e) => handleFormChange("principal_risk_bucket", e.target.value)}
+                              className="col-span-3"
                             />
                           </div>
                         </div>
@@ -290,7 +344,7 @@ export default function RiskCatalog() {
               ))}
               {risks.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-gray-500">
+                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
                     No risks found. Click "Add Risk" to get started.
                   </TableCell>
                 </TableRow>

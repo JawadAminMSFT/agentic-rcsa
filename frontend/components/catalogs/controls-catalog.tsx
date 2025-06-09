@@ -118,7 +118,7 @@ export default function ControlsCatalog() {
   return (
     <Card className="border-0 shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <CardTitle className="text-lg font-semibold text-gray-900">Controls Catalog</CardTitle>
+        <CardTitle className="text-lg font-semibold text-gray-900">Controls Library</CardTitle>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button 

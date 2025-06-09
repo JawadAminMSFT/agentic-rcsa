@@ -97,7 +97,7 @@ export default function CatalogsPage() {
                   value="controls" 
                   className="text-sm px-4 py-2 rounded-sm data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
                 >
-                  Controls Catalog
+                  Controls Library
                 </TabsTrigger>
                 <TabsTrigger 
                   value="guardrails" 
@@ -109,7 +109,7 @@ export default function CatalogsPage() {
                   value="samples" 
                   className="text-sm px-4 py-2 rounded-sm data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm"
                 >
-                  Sample Submissions
+                  Past Submissions
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -134,7 +134,7 @@ export default function CatalogsPage() {
               </TabsContent>
 
               <TabsContent value="samples" className="mt-0">
-                <Suspense fallback={<CatalogLoading title="Sample Submissions" />}>
+                <Suspense fallback={<CatalogLoading title="Past Submissions" />}>
                   <SamplesCatalog />
                 </Suspense>
               </TabsContent>

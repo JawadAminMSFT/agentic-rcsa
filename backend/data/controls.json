@@ -1,22 +1,278 @@
 [
-    {"id": "C001", "name": "Vendor SLA Monitoring",            "description": "Automated alerts if SLA missed >1h; monthly SLA reviews.",              "subriskIds": ["R2","R20"]},
-    {"id": "C002", "name": "High-Availability Architecture",   "description": "Geo-redundant deployment; quarterly failover drills.",             "subriskIds": ["R3"]},
-    {"id": "C003", "name": "Automated Data-Validation Rules",  "description": "Schema checks against regulatory templates pre-submission.",  "subriskIds": ["R4","R5"]},
-    {"id": "C004", "name": "MFA Enforcement",                  "description": "Enforce MFA for all user actions; annual penetration tests.",       "subriskIds": ["R11"]},
-    {"id": "C005", "name": "AES-256 Encryption at Rest",       "description": "Encrypt all PII with AES-256; key rotation every 90 days.",   "subriskIds": ["R12"]},
-    {"id": "C006", "name": "Credit-Limit Monitoring",         "description": "Real-time checks against counterparty limits; alerts at 80%.",   "subriskIds": ["R6","R7"]},
-    {"id": "C007", "name": "Liquidity Stress-Test",            "description": "Monthly Monte-Carlo cash-flow simulations under stress.",        "subriskIds": ["R10"]},
-    {"id": "C008", "name": "Regulatory Training Program",      "description": "Quarterly compliance workshops; mandatory certification.",       "subriskIds": ["R4"]},
-    {"id": "C009", "name": "Incident Response Plan",           "description": "Documented IR procedures; semi-annual tabletop exercises.",    "subriskIds": ["R3","R11"]},
-    {"id": "C010", "name": "Fraud Detection Algorithms",       "description": "ML-based anomaly detection on claims; daily model retrain.",     "subriskIds": ["R19"]},
-    {"id": "C011", "name": "Governance Committee Oversight",   "description": "Monthly risk-committee review of new initiatives.",            "subriskIds": ["R13","R14"]},
-    {"id": "C012", "name": "API Security Gateway",             "description": "API Gateway with WAF, rate limiting, OWASP rules.",            "subriskIds": ["R20"]},
-    {"id": "C013", "name": "Media Monitoring Service",         "description": "24/7 brand-mention alerts; escalation workflows.",                "subriskIds": ["R15","R14"]},
-    {"id": "C014", "name": "ESG Audit Framework",              "description": "Annual third-party ESG audit; actionable follow-up.",           "subriskIds": ["R17","R18"]},
-    {"id": "C015", "name": "Business Continuity Plan (BCP)",   "description": "Comprehensive BCP with RTO/RPO targets; semi-annual drills.",  "subriskIds": ["R3","R10"]},
-    {"id": "C016", "name": "Insider Trading Monitoring",       "description": "Real-time trade surveillance with alert triggers.",              "subriskIds": ["R16"]},
-    {"id": "C017", "name": "Regulatory Mapping Database",      "description": "Updated map of product requirements per jurisdiction.",       "subriskIds": ["R4","R5"]},
-    {"id": "C018", "name": "Change Management Process",        "description": "Formal change requests, approvals, rollback guidelines.",       "subriskIds": ["R1","R3"]},
-    {"id": "C019", "name": "Third-Party Security Assessments", "description": "Annual pentests & compliance attestations from vendors.",    "subriskIds": ["R2","R11","R20"]},
-    {"id": "C020", "name": "Stakeholder Communication Plan",   "description": "Regular executive & regulator updates.",                   "subriskIds": ["R4","R14","R15"]}
-]
+    {
+      "id": "C001",
+      "name": "Application Contingency Guideline",
+      "description": "Treasury Operations and its IT partners (Financial Processes & Modernization and Group Finance Systems) established Treasury Operations Applications Contingency Guideline for responding to incidents that affect the availability of a technology system in the stack of applications supporting Treasury Operations end-to-end process and/or the seamless movement of files from one system to the next. This Guideline is revisited annually and is approved by Heads (VPs) of each team. It is published on Treasury's SharePoint and Shared drive.",
+      "subriskIds": ["R3", "R4", "R52", "R43"]
+    },
+    {
+      "id": "C002",
+      "name": "Application DR Testing",
+      "description": "Group Finance Systems are leading the annual DR test effort for the internal Treasury applications and are responsible for supporting Treasury Operations if issues are discovered during the DR test.  The DR test results are entered into the BCP application Fusion by the GF BC Management team. In Fusion, these results are checked against the Recovery Time Objective and Recovery Point Objective requested by the related Treasury processes.",
+      "subriskIds": ["R3", "R4", "R52"]
+    },
+    {
+      "id": "C003",
+      "name": "Application End User Testing",
+      "description": "Treasury Operations executes User Acceptance, Live Bank and Post Implementation Validation testing of changes to Treasury Operations applications to ensure all business requirement are met, and business operations are not negatively affected by an application upgrade or new system implementation.",
+      "subriskIds": ["R4", "R43", "R52"]
+    },
+    {
+      "id": "C006",
+      "name": "Application Service Levels",
+      "description": "Service level agreement is established between Treasury Operations, Financial Processes and Modernization and Group Finance Systems and is revisited annually. It covers the systems support and service standards provided by FP&M and GFT to Treasury Operations for the Treasury applications. The agreement establishes the process and accountabilities of key stakeholders for the key support area, issue objective recovery time and the applicable issue escalation process.  If the established service level is not met in production operations or project related activity, the issues are raised in the regular meetings between Treasury Operations management and Treasury IT partners.",
+      "subriskIds": ["R81"]
+    },
+    {
+      "id": "C008",
+      "name": "Industry Standard Compliance",
+      "description": "Treasury Operations, with support of IT partners, monitor and track industry developments (regulators, payment associations, etc.) to ensure that Treasury applications meet payment industry standards and best practices by implementing new payment methods and technologies.",
+      "subriskIds": ["R82"]
+    },
+    {
+      "id": "C009",
+      "name": "Production Issue Log",
+      "description": "Treasury Compliance and Controls team monitors Production Issue Log weekly and ensures Operational Risk Incident management framework is followed by the Treasury Operations. Operations team uses the log to analyze the issues and identify the next steps for issue resolution and prevention.",
+      "subriskIds": ["R83"]
+    },
+    {
+      "id": "C010",
+      "name": "Compliance Reports",
+      "description": "Treasury Compliance and Controls completes periodic compliance reporting submissions to Segment Compliance Officer. TCC works with Treasury teams to ensure the accuracy of these reporting submissions which are stored on the TCC Shared drive. Such reporting submissions are approved by Treasury Operations Compliance Manager and/or Head of Treasury Operations, including: - Anti-Money Laundering Self-Assessment: annually - Regulatory Compliance Management Self-Assessment: annually - OSFI 525 (Regulations Establishing a List of Entities): monthly - OSFI 590 (Justice for Victims of Corrupt Foreign Officials): monthly - Global Privacy Self-Assessment: annually - BU/Functions Privacy Report: quarterly",
+      "subriskIds": ["R84"]
+    },
+    {
+      "id": "C011",
+      "name": "Compliance Training",
+      "description": "Annual Compliance training is delivered by Treasury Compliance and Controls to the Global Treasury Operations team. Training materials are put together by the TCC reflecting latest industry trends and developments, as well as the  company policy updates applicable to Treasury Operations. Evidence of the training sessions such as the Outlook meeting invite is stored on TCC Shared drive. The meeting invite is developed using Workday team list, and the training attendance is taken during the meeting. For the employees unable to attend, TCC sends out communications sharing the training materials and recording and requesting an attestation from such employees that the training materials and recording were reviewed.",
+      "subriskIds": ["R85"]
+    },
+    {
+      "id": "C012",
+      "name": "Cross Training",
+      "description": "Ongoing cross training occurs within each functional Treasury area with tasks assigned to primary and secondary performers and reviewers.",
+      "subriskIds": ["R69"]
+    },
+    {
+      "id": "C013",
+      "name": "Ongoing Assessment",
+      "description": "Ongoing assessment of BAU work and resourcing needs are discussed amongst department leadership (VP, AVP and director level) and resourcing is adjusted subsequent to the discussion, as applicable.",
+      "subriskIds": ["R86"]
+    },
+    {
+      "id": "C014",
+      "name": "Policies and Procedures",
+      "description": "Policies and Procedures are documented to include applicable procedures and controls, and roles and responsibilities, and are consistent with corporate policies. The documentation is clearly written, readily available, updated on established frequency, and approved by Treasury Operations individuals who have the appropriate skill set to do so. The documentation is communicated to relevant personnel and used for employee training.  Treasury owns the following policies and standards that are updated every 3 years or earlier if required: - Global Disbursement Approval Policy - Global Disbursement Approval Standard - Global Operational Banking Policy - Global Operational Banking Standard - Global Bank Reconciliation Standard - Global Receipts Standard Treasury policies are published in the company\u2019s Policy Database. Applicable stakeholder group is notified via e-mail whenever a material change is made to any of the Treasury policies.",
+      "subriskIds": ["R74"]
+    },
+    {
+      "id": "C016",
+      "name": "Succession Planning",
+      "description": "Periodic discussion of appropriate staff development among the team and with department leadership (VP, AVP and director level) occurs to review available talent.",
+      "subriskIds": ["R70"]
+    },
+    {
+      "id": "C017",
+      "name": "Bank Reconciliation Checklist Sign-off/Approval",
+      "description": "Monthly bank reconciliations are generated by both the Frontier reconciliation system and the CTM reconciliation system. The Manila Reconciliation Analysts (MBPS) verify month-end book balance to source data (i.e. cash sub-ledger) and sign-off these monthly bank reconciliations (approval Level 1).\n The Reconciliation Analysts verify month-end bank balance to month-end bank statements or BAI files and sign off on these reconciliations (approval Level 2).\n Treasury AVP, Director, Manager or Senior Treasury Specialist is responsible to ensure the entire reconciliation process is complete. Reconciliation Analysts prepare the monthly reconciliation checklist, logging the completion status and the AVP/Director/Manager or Senior Treasury Specialist reviews and signs off on the monthly reconciliation checklist.\n Outstanding items are monitored regularly. Any items that are not cleared in a timely manner are escalated to the business unit management by the Quality Analysts (MBPS) and Reconciliation Analysts. Follow-up emails sent / meetings with BU may be scheduled by the AVP/Director/Manager or Senior Treasury Specialist, Treasury Operations Compliance & Control, depending on the situation.",
+      "subriskIds": ["R71"]
+    },
+    {
+      "id": "C018",
+      "name": "Disbursement Approvers Set Up",
+      "description": "Disbursement Approvers are set up in Disbursement Authorization Database (DAD) by Treasury DAD administrator based on the receipt of requests from the business units. All types of requests must first be appropriately authorized based on the established approval requirements before DAD Administrator can process and update DAD. All changes made to DAD on a daily basis will then be included on the Disbursement Authorization Change Report. This report is reviewed by another Treasury staff at a designated job level who is not involved in the update process.",
+      "subriskIds": ["R72"]
+    },
+    {
+      "id": "C019",
+      "name": "Payment Authorization",
+      "description": "Authorization Verification: \u2022 Disbursement requests submitted via eTreasury and CB JETS/Infor CashBook/AP are systematically authorized against DAD (Disbursement Authorization Database). In the case of manual disbursement requests CMO verifies the appropriate authorization of the requests by performing a manual comparison of authorization against DAD or the Global Disbursement Approval Standard (GDAS) for large payments. \u2022 For payments generated from administrative systems, it is the business unit management\u2019s responsibility to ensure that there are effective controls in place to verify that the payment information is accurate and not vulnerable to fraudulent manipulation prior to submitting these payments to Treasury CMO for execution and release with the banks (in compliance with Global Disbursement Approval Standard \u2013 GDAS)",
+      "subriskIds": ["R72"]
+    },
+    {
+      "id": "C020",
+      "name": "Separation of duties (automated system control)",
+      "description": "Treasury applications Infor and eTreasury have systematic controls to prevent user from submitting and approving the same request.",
+      "subriskIds": ["R73"]
+    },
+    {
+      "id": "C021",
+      "name": "Treasury Policy Attestation and QA",
+      "description": "Treasury Compliance and Controls obtains Annual Policy Attestation from all legal entities to confirm compliance with the Global Treasury Operations related policies and standards. TCC tracks responses to ensure all legal entities provided their Attestation of compliance which are then stored on TCC Shared drive. TCC conducts a quality assurance on 5 randomly selected legal entities whereby legal entities provide an outline of their controls pertaining to Treasury Policies. TCC manager signs off on the legal entity Attestation and QA results.  If a non-compliance is identified, Treasury will communicate to the non-compliant BUs that the compliance with Treasury policies is required. The non-compliant BU is expected to respond and update Archer as required.",
+      "subriskIds": ["R87"]
+    },
+    {
+      "id": "C023",
+      "name": "BU Inquiry & Issue Monitoring",
+      "description": "Treasury Operations Cash Management team monitors the Treasury Cash Services Application to ensure all inquiries and issues raised by BU on any Treasury concerns are reviewed timely to identify the next steps for issue resolution within SLA",
+      "subriskIds": ["R88"]
+    },
+    {
+      "id": "C024",
+      "name": "CEFT Feed Monitoring",
+      "description": "Treasury Operations ensures monitoring of CCD (BU Admin System) feeds and Bank Transmission files processed by CEFT (Standard Life legacy application) and BMO. Cash Management Operations team executes the monitoring multiple times a day using BU Admin Feed control reports and BMO return files to verify that: - BU Admin files were received on time and successfully imported to CEFT and - all bank transaction files have been successfully transmitted to BMO and acknowledged back. CMO updates CEFT Stats Log with feed details. Treasury\u2019s CMO staff triggers the CCD feed transmission from CEFT to BMO after confirming the feed date in CEFT matches the date in the CCD feed control report provided by the BU. CMO Montreal will work with the BU to resolve any discrepancies.",
+      "subriskIds": ["R89"]
+    },
+    {
+      "id": "C025",
+      "name": "Independent review and approval of payment activities",
+      "description": "Independent review and approval of payment activities",
+      "subriskIds": ["R90"]
+    },
+    {
+      "id": "C028",
+      "name": "INFOR Feed Monitoring",
+      "description": "Treasury Operations ensures monitoring of BU Admin System feeds and Bank Transmission files processed by INFOR and banks. Treasury Business Solutions team executes the monitoring multiple times a day using Infor Feed Dashboard and Kyriba Bank File Dashboard information to verify that: - BU Admin files were received on time and successfully imported to Infor and - all bank transaction files have been successfully transmitted to the banks and acknowledged back. Daily sign-off process on Infor feed verification task is completed by Treasury Business Solutions team that maintains a manual log of the actions taken during the day. Infor Feed Validation rejects Admin Feed files dated older than the current date minus 5 days. If a feed was rejected, Treasury Business Solutions are notified. TBS will liaise with the BU to resolve the issue and will contact Group Functions Technology team to re-process the file, if required",
+      "subriskIds": ["R89"]
+    },
+    {
+      "id": "C034",
+      "name": "Sub-Ledger to GL Reconciliation",
+      "description": "\u2022 A monthly download from TCS (TCS cash sub-ledger) is imported into an Excel spreadsheet. In addition, Infor GL data is retrieved via Essbase within the same spreadsheet where the data from both sources are compared.  Variances between both sources are identified.  Corrective action is taken by Treasury to ensure variances are cleared and/or reported properly. \u2022 A monthly download from CB (Infor cash sub-ledger) is imported into an Excel spreadsheet. In addition, Infor GL data is retrieved via Essbase within the same spreadsheet where the data from both sources are compared.  Variances between both sources are identified.  Corrective action is taken by Treasury to ensure variances are cleared and/or reported properly. \u2022 The Invoice Accrual Reconciliation Report is produced from the Infor Accounts Payable system monthly.  The balances are keyed into an Excel spreadsheet, Infor GL data is retrieved via Essbase within the same spreadsheet where data from both sources are compared. Variances between both sources are identified.  Corrective action is taken by Treasury to ensure variances are cleared and/or reported properly. \u2022 An extract containing YTD balances by Certificate (SLAC) number is produced monthly from the Infor Strategic Ledger (LCash subledger). The balances are imported into an Excel worksheet, Infor GL data is retrieved via Essbase within the same spreadsheet where data from both sources are compared.  Variances between both sources are identified.  Corrective action is taken by Treasury to ensure variances are cleared and/or reported properly. \u2022 Reconciliations are completed by the Cash Accounting Analyst. The AVP/Director/Manager or Senior Treasury Specialist, Treasury Operations Compliance & Control , reviews and signs off on the reconciliations.",
+      "subriskIds": ["R91"]
+    },
+    {
+      "id": "C035",
+      "name": "TCS Feed Monitoring",
+      "description": "Treasury Operations ensures monitoring of BU Admin System feeds and Bank Transmission files processed by TCS and banks. Cash Management Operations team executes the monitoring multiple times a day using BU Admin Feed control reports, TCS transaction extracts and bank return files/reports to verify that: - BU Admin files were received on time and successfully imported to TCS and - all bank transaction files have been successfully transmitted to the banks and acknowledged back. Daily sign-off process on TCS feed verification task is completed by Cash Management Operations team that maintains a manual log of the actions taken during the day. TCS Feed Validation rejects Admin Feed files dated older than the current date minus 7 days. If a feed was rejected, Cash Management Operations are notified. CMO will liaise with the BU to resolve the issue and will contact Group Functions Technology team to re-process the file, if required.",
+      "subriskIds": ["R92"]
+    },
+    {
+      "id": "C036",
+      "name": "Vendor Setup Controls",
+      "description": "After receiving the vendor setup request from BU, Vendor Compliance verify supporting documents as well as approval and compliance documentation provided. The Procurement team, AP Compliance team and/or Treasury Compliance and Control team each review the documentation routed to them for approval, before Vendor Compliance setup the vendor in Infor AP.",
+      "subriskIds": ["R76"]
+    },
+    {
+      "id": "C037",
+      "name": "3-way Invoice Matching QA (Audit) for Procurement Vendors",
+      "description": "Temporary control until the automated solution is implemented: AP team selects 5% of invoices paid to Procurement vendors in the previous month by each BU. Such audit sample does not include invoices from the same BU contract that were included in the previous month's sample.  The following QA is performed for each invoice: invoice amount, type of service rendered/goods delivered is verified against the underlying contract and against the Proof of Service or Goods delivery (i.e. check type of service/goods rendered as per invoice). If a discrepancy/issue is found, AP team escalates with the BU. If BU cannot explain the issue, AP tagged such audit as failed and informs the BU.  All audit evidence is saved on SP. Procurement team have access to the SP to review the audit results.",
+      "subriskIds": ["R93"]
+    },
+    {
+      "id": "C043",
+      "name": "Project Monitoring",
+      "description": "Project manager monitors project status at least once a week, including project schedule, resource availability, dependencies and budget in order to successfully deliver the project on budget and on time and to prevent scope creep. Project plan and project team action items are stored in MS Project application.",
+      "subriskIds": ["R77"]
+    },
+    {
+      "id": "C044",
+      "name": "Project Planning",
+      "description": "Project manager confirms the scope of the project and makes project effort/cost/time estimates to ensure adequate resources are available for the project. The project plan is signed off by the appropriate Treasury Management project/business owner (AVP and/or VP) before the project gets underway.",
+      "subriskIds": ["R78"]
+    },
+    {
+      "id": "C045",
+      "name": "Project Reporting",
+      "description": "Project manager provides periodic reporting of project health, risks, key decisions and other project requirements to Treasury Management team and other stakeholders. Project status report is distributed on a weekly basis, stored in project's SharePoint and reviewed by the project delivery owner to ensure the project stays on track.",
+      "subriskIds": ["R79"]
+    },
+    {
+      "id": "C046",
+      "name": "Quarter-end cash balance review/adjustment",
+      "description": "In order to present the best possible cash balances for financial reporting purposes, Treasury Operations undertakes a review of operational cash balances and posts reversing adjusting journals as needed. MoM Review & Entries: \u2022 For MLI & JH Subs the QA Analyst (Manila) prepares a list of bank and book items with outstanding items over specific thresholds ($1M for MLI and $500K for JH).  \u2022 The Reconciliation Analysts review the outstanding items to determine whether manual journal entries are required to account for significant timing issues and/or the correction of any errors. \u2022 For outstanding bank items, the Cash Accounting Analysts prepare manual journal entries (reversing) to reflect the timing difference between bank and the ledger.  \u2022 For outstanding book items, the Reconciliation Analysts contact the BU to confirm the proper accounting period for the outstanding item and Cash Accounting Analysts prepare a manual journal entry (reversing) to adjust the accounting period if necessary. \u2022 All JETS entries prepared by the Cash Accounting Analyst are reviewed and approved by Director, Manager or Senior Treasury Specialist, Treasury Operations prior to being released in Infor GL. Bank Overdraft Review & Entries: \u2022 For MLI, JH and Other Companies, the Cash Accounting Analyst determines which banks have an overdraft book balance, by legal id and currency by reviewing the balances as per the CB, TCS and Maximis month-end reports \u2022 The Cash Accounting Analyst will prepare manual journal entries (reversing) to adjust the overdraft items for quarter-end reporting purposes to reflect a liability for the overdrafts \u2022 All JETS entries prepared by the Cash Accounting Analyst are reviewed and approved by AVP/Director/Manager or Senior Treasury Specialist, Treasury Operations Compliance  & Control prior to being released in Infor GL.",
+      "subriskIds": []
+    },
+    {
+      "id": "C048",
+      "name": "Suspense Account Monitoring",
+      "description": "\u2022 Weekly, the Cash Accounting Analyst accesses the Cadency Suspense System and matches transfer entries processed by the Treasury Desk and/or Accounts Payable. All outstanding items are investigated and cleared within the \u201c30\u201d day threshold assigned to Treasury Suspense accounts \u2022 A monthly summary is produced by the Cash Accounting Analyst and provided to the AVP/ Director/ Manager or Senior Treasury Specialist, Treasury Operations Compliance & Control for review.  All monthly reports are signed off by the AVP/Director/Manager or Senior Treasury Specialist.",
+      "subriskIds": ["R80"]
+    },
+    {
+      "id": "C053",
+      "name": "Internal initiative process includes requirements for proactive and early engagement of the Treasury Teams to leverage Team\u2019s expertise and identify change management challenges.",
+      "description": "Internal initiative process includes requirements for proactive and early engagement of the Treasury Teams to leverage Team\u2019s expertise and identify change management challenges.",
+      "subriskIds": ["R94"]
+    },
+    {
+      "id": "C055",
+      "name": "Bank and Vendor Monitoring",
+      "description": "Treasury Operations monitor bank and vendor performance and service level and provide ongoing feedback to these service partners during regular meetings. Treasury Compliance and Controls executes Bank and Vendor Governance artifacts as required by internal policies, including bank and vendor scorecards, governance due diligence checklists, and annual performance review for vendors. If performance issues are identified, Treasury Operations will work with banks and vendors to remediate. All significant issues related to the vendor performance are communicated to Procurement\u2019s Vendor Governance Management.",
+      "subriskIds": ["R95"]
+    },
+    {
+      "id": "C056",
+      "name": "Outsourcing Policy Compliance",
+      "description": "Treasury Operations ensures compliance with company's Outsourcing and Vendor Risk Management Policy and Standard requirements by executing the following actions: - Engage Procurement at the start of every procurement activity, - Ensure Risk Concurrence is obtained for Highest Risk vendors prior to signing a contract,  - Complete all due diligence assessment activities before contract execution and before delivery of products or services, - Submit Risk Exception request for arrangements that have exceptions to Manulife\u2019s Standards or risks that fall outside risk tolerance benchmark - Document the formal transition plan for all Highest Risk contracts, - Prior to termination of a Highest Risk contract or vendor relationship, complete the Termination Sign-Off Form and submit to Procurement for sign-off  - Conduct contract termination in compliance with the contract terms to ensure the vendor is meeting the termination assistance contract obligations and the risks of a disruption in operations is minimal.  The above requirements are subject to change based on the Outsourcing and Vendor Risk Management Policy and Standard that are not owned by Treasury Operations.",
+      "subriskIds": ["R96"]
+    },
+    {
+      "id": "C057",
+      "name": "AML/ATF Active Vendor Scanning",
+      "description": "Vendor Compliance team performs weekly scanning of all active Infor AP vendor records, except for Japan jurisdiction vendors, against the mandatory AML/ATF watchlists in Bridger. The AML/ATF Active Vendor Scanning for Japan is executed by the local Compliance team due to language restrictions. All alerts are being reviewed and discounted as appropriate. Treasury Compliance and Controls manager provides sign-off on the weekly vendor scanning results.",
+      "subriskIds": ["R97"]
+    },
+    {
+      "id": "C058",
+      "name": "AML/ATF Institutional Due Diligence",
+      "description": "Treasury Compliance and Controls performs an AML/ATF assessment on institutions associated with all new bank relationships, account openings, or service engagements, against Risk Rating Criteria established by the Treasury Operations' Bank and Vendor Governance Monitoring Methodology. If AML/ATF assessment on institutions results in watchlist alert that cannot be closed or discounted by TCC, it will be escalated to Global Compliance Office for scrutiny and Treasury may not continue to pursue this banking relationship. TCC also performs annual reviews on any medium-high or high-risk bank related service relationships which are active and have not been subject to a review prior to July of the calendar year.",
+      "subriskIds": ["R98"]
+    },
+    {
+      "id": "C059",
+      "name": "AML/ATF New/Changed Vendor Scanning",
+      "description": "Vendor Compliance team performs new or changed vendor request scanning against the mandatory AML/ATF watchlists in Bridger. Any alerts are sent to Treasury Compliance and Controls for review and discounting prior to setting up or changing any vendor in the Infor AP system. Vendor Compliance team performs AP Vendor Setup QA to ensure that all completed requests are accurate, with complete supporting documentation, have valid approvals, and were setup in accordance with the standards designed for each territory, including mandatory name scan of the vendor in Bridger prior to the vendor addition or vendor change in Infor AP. If the vendor scan against the mandatory AML/ATF watchlists was missed during the setup, QA reviewer will perform the scan.",
+      "subriskIds": ["R99"]
+    },
+    {
+      "id": "C060",
+      "name": "AS1 - Access Request Initiation & Approval (Bus) (treasury apps)",
+      "description": "All changes (add, transfer, termination) to user access privileges are requested timely and approved by the information owner or authorized delegate to ensure least privilege access.",
+      "subriskIds": ["R100"]
+    },
+    {
+      "id": "C061",
+      "name": "AS2 - Access Approval and Administration (IT) Finance and Treasury apps",
+      "description": "The system access administrator verifies the appropriate approvals per access request ticket and configures the access to the system to match the request on a timely basis.",
+      "subriskIds": ["R101"]
+    },
+    {
+      "id": "C062",
+      "name": "AS6 \u2013 Application User Transfer Reconciliation - Treasury",
+      "description": "Management reconciles Workday transfer reports for potential impact to the financial reporting process and verifies that requests to change or remove access have been submitted where necessary. The users\u2019 new manager approves access that is retained following the transfer. Access change or removal requests are submitted as necessary.",
+      "subriskIds": ["R102"]
+    },
+    {
+      "id": "C064",
+      "name": "AS7.1 \u2013 Role Composition Review- treasury",
+      "description": "The Information Owner or authorized delegate has performed a role review for the application entitlements. The objective is to ensure that combinations of access entitlements under the same access role are appropriate for the business role and the combination of entitlements could not result in the bypass of key controls (e.g. submission and approval of the same transaction). Information on the roles and their designed purpose is made available to access reviewers in AS7.3.",
+      "subriskIds": ["R103"]
+    },
+    {
+      "id": "C065",
+      "name": "AS7.3 - User Access Review - Full (Treasury)",
+      "description": "The Information Owner or authorized delegate has performed a review of all interactive accounts and has confirmed that they are assigned to users (internal and external) and are allocated to the roles (identified in AS7.1) appropriate for the tasks being performed by those individuals. If accounts are assigned entitlements outside of preapproved roles or AS7.1 is not performed, accounts are assessed at the entitlement level.  The Information Owner or User Line Manager are accountable to request user removal from unnecessary roles and/or entitlements if they deem they are no longer necessary for the user to perform their responsibilities.",
+      "subriskIds": ["R104"]
+    },
+    {
+      "id": "C067",
+      "name": "Business Continuity Plan",
+      "description": "Treasury Operations Business Continuity Plan documents service recovery strategy to restore business processes and functions in case of unavailability of Treasury's critical vendors. Treasury Operations BCP is reviewed and updated annually (or whenever a significant change occurs) and is signed off by the Plan Owner (Head of Treasury Operations) after all Group Functions BCP annual exercises/BCM requirements are completed.",
+      "subriskIds": ["R2", "R3", "R65"]
+    },
+    {
+      "id": "C068",
+      "name": "Business Strategy Alignment",
+      "description": "Treasury Operations management, NA and Asia Treasury Officers and Treasury IT partners (Financial Processes & Modernization and Group Finance Systems) meet monthly to align on business and technology strategies. The meeting agenda and minutes are stored on the Treasury SharePoint.",
+      "subriskIds": ["R66"]
+    },
+    {
+      "id": "C070",
+      "name": "Electronic Records Destruction",
+      "description": "Once the electronic records reach its retention period, the destruction of such records is approved and signed off by the Business Owner(s) as well as Tax, Legal and Audit representatives. The records are destroyed in a secure manner as outlined in the business procedures, and is done annually. Records that are not destroyed subsequent to its retention period are clearly explained (i.e. litigation holds).",
+      "subriskIds": ["R68"]
+    },
+    {
+      "id": "C071",
+      "name": "Paper Records Destruction",
+      "description": "Once the paper records reach its retention period, the destruction of such records is approved and signed off by the Business Owner(s) as well as Tax, Legal and Audit representatives. The records are destroyed annually in a secure manner (Iron Mountain). Records that are not destroyed subsequent to its retention period are clearly explained (i.e. litigation holds).",
+      "subriskIds": ["R68"]
+    },
+    {
+      "id": "C072",
+      "name": "Records Inventory and Schedule",
+      "description": "A complete and current Records Inventory and Retention Schedule is maintained and aligns to the Global Records Classification schedule, and is stored on a records management SharePoint site that is accessible to all key records management personnel within the business units.",
+      "subriskIds": ["R68"]
+    }
+  ]

@@ -137,7 +137,7 @@ export default function SamplesCatalog() {
   }
 
   if (loading) {
-    return <div className="text-center py-8 text-gray-500">Loading sample submissions...</div>
+    return <div className="text-center py-8 text-gray-500">Loading past submissions...</div>
   }
 
   if (error) {
@@ -152,7 +152,7 @@ export default function SamplesCatalog() {
   return (
     <Card className="border-0 shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <CardTitle className="text-lg font-semibold text-gray-900">Sample Submissions</CardTitle>
+        <CardTitle className="text-lg font-semibold text-gray-900">Past Submissions</CardTitle>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button 
@@ -347,7 +347,7 @@ export default function SamplesCatalog() {
               {samples.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={4} className="text-center py-8 text-gray-500">
-                    No sample submissions found. Click "Add Sample" to get started.
+                    No past submissions found. Click "Add Sample" to get started.
                   </TableCell>
                 </TableRow>
               )}

@@ -38,9 +38,11 @@ class ControlItem(BaseModel):
 
 class RiskItem(BaseModel):
     id: str
-    category: str
-    subrisk: Optional[str] = None
-    description: Optional[str] = None
+    category_level_1: str
+    category_level_2: Optional[str] = None
+    category_level_3: Optional[str] = None
+    risk_statement: str
+    principal_risk_bucket: str
 
 class GuardrailItem(BaseModel):
     id: str
@@ -257,7 +259,7 @@ def delete_risk(risk_id: str):
     _save_json(RISK_PATH, risks)
     return {"status": "deleted"}
 
-# --- Sample Submissions CRUD ---
+# --- Past Submissions CRUD ---
 SAMPLES_PATH = os.path.join(DATA_DIR, 'sample_submissions.json')
 
 @app.get('/samples')
