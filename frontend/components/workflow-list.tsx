@@ -5,8 +5,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, FileText, Plus, Search, Filter } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { Clock, FileText, Plus, CheckCircle, AlertTriangle, PlayCircle } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { getWorkflows } from "@/lib/workflow-service"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -59,48 +58,92 @@ export default function WorkflowList({ status, search }: WorkflowListProps = {})
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="bg-slate-50 rounded-lg p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-blue-500 rounded-lg">
+            <FileText className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Risk Assessment Workflows
+            </h2>
+            <p className="text-gray-600 text-sm">Manage and track your risk assessment processes</p>
+          </div>
+        </div>
+        
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div className="bg-white rounded-lg p-4 border">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">
+                  {workflows.filter(w => w.status === 'approved').length}
+                </p>
+                <p className="text-xs text-gray-600">Approved</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg p-4 border">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <PlayCircle className="w-4 h-4 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">
+                  {workflows.filter(w => w.status === 'active').length}
+                </p>
+                <p className="text-xs text-gray-600">In Progress</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg p-4 border">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-100 rounded-lg">
+                <AlertTriangle className="w-4 h-4 text-amber-600" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">
+                  {workflows.filter(w => w.status === 'awaiting_feedback').length}
+                </p>
+                <p className="text-xs text-gray-600">Awaiting Review</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Workflows Grid */}
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredWorkflows.map((workflow) => (
           <Link key={workflow.id} href={`/workflows/${workflow.id}`}>
-            <Card className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer group">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="text-sm font-medium text-gray-900 group-hover:text-gray-700 transition-colors line-clamp-2">
-                      {workflow.title}
-                    </CardTitle>
-                    <p className="text-xs text-gray-500 mt-1">
-                      ID: {workflow.id}
-                    </p>
-                  </div>
+                  <CardTitle className="text-base font-semibold text-gray-900 line-clamp-2">
+                    {workflow.title}
+                  </CardTitle>
                   <StatusBadge status={workflow.status} />
                 </div>
               </CardHeader>
+              
               <CardContent className="pt-0">
                 <div className="space-y-3">
-                  <p className="text-xs text-gray-600 line-clamp-2">
+                  <p className="text-sm text-gray-600 line-clamp-2">
                     {workflow.description || "No description available"}
                   </p>
                   
-                  <div className="flex items-center gap-3 text-xs text-gray-500">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <Clock className="w-3 h-3" />
+                    <span>
                       {formatDistanceToNow(new Date(workflow.updatedAt), { addSuffix: true })}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <FileText className="w-3 h-3" />
-                      {workflow.current_step}
-                    </div>
-                  </div>
-                  
-                  {/* Progress Indicator */}
-                  <div className="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
-                    <div 
-                      className="h-1.5 bg-gray-600 rounded-full transition-all duration-300"
-                      style={{ width: `${getProgressPercentage(workflow.current_step)}%` }}
-                    />
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -109,15 +152,22 @@ export default function WorkflowList({ status, search }: WorkflowListProps = {})
         ))}
       </div>
 
+      {/* Empty State */}
       {filteredWorkflows.length === 0 && (
-        <div className="bg-white rounded-lg p-8 text-center shadow-sm border border-gray-200">
-          <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-          <h3 className="text-sm font-medium text-gray-900 mb-2">No workflows found</h3>
-          <p className="text-xs text-gray-600 mb-4">
+        <div className="bg-gray-50 rounded-lg p-8 text-center border">
+          <div className="mx-auto w-16 h-16 bg-gray-400 rounded-lg flex items-center justify-center mb-4">
+            <FileText className="w-8 h-8 text-white" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">No workflows found</h3>
+          <p className="text-gray-600 mb-4 max-w-md mx-auto">
             {searchTerm || filterStatus !== "all"
               ? "Try adjusting your search or filter criteria"
               : "Get started by creating your first risk assessment workflow"}
           </p>
+          <Button>
+            <Plus className="w-4 h-4 mr-2" />
+            Create Your First Workflow
+          </Button>
         </div>
       )}
     </div>
@@ -125,45 +175,29 @@ export default function WorkflowList({ status, search }: WorkflowListProps = {})
 }
 
 function StatusBadge({ status }: { status: string }) {
-  switch (status.toLowerCase()) {
-    case "approved":
-      return (
-        <Badge className="bg-green-50 text-green-700 border border-green-200 rounded-md px-2 py-1 text-xs">
-          Approved
-        </Badge>
-      )
-    case "rejected":
-      return (
-        <Badge className="bg-red-50 text-red-700 border border-red-200 rounded-md px-2 py-1 text-xs">
-          Rejected
-        </Badge>
-      )
-    case "awaiting_feedback":
-      return (
-        <Badge className="bg-amber-50 text-amber-700 border border-amber-200 rounded-md px-2 py-1 text-xs flex items-center gap-1">
-          <Clock className="h-3 w-3" />
-          Feedback Needed
-        </Badge>
-      )
-    default:
-      return (
-        <Badge className="bg-blue-50 text-blue-700 border border-blue-200 rounded-md px-2 py-1 text-xs">
-          In Progress
-        </Badge>
-      )
+  const variants = {
+    active: "bg-blue-500 text-white",
+    approved: "bg-green-500 text-white",
+    rejected: "bg-red-500 text-white",
+    awaiting_feedback: "bg-amber-500 text-white",
+    default: "bg-gray-500 text-white"
   }
-}
 
-function getProgressPercentage(currentStep: string): number {
-  const steps = [
-    "generate_draft",
-    "map_risks", 
-    "map_controls",
-    "generate_mitigations",
-    "flag_issues",
-    "evaluate_decision"
-  ]
-  
-  const stepIndex = steps.indexOf(currentStep)
-  return stepIndex === -1 ? 0 : Math.round(((stepIndex + 1) / steps.length) * 100)
+  const icons = {
+    active: <PlayCircle className="w-3 h-3 mr-1" />,
+    approved: <CheckCircle className="w-3 h-3 mr-1" />,
+    rejected: <AlertTriangle className="w-3 h-3 mr-1" />,
+    awaiting_feedback: <Clock className="w-3 h-3 mr-1" />,
+    default: <FileText className="w-3 h-3 mr-1" />
+  }
+
+  const variant = variants[status as keyof typeof variants] || variants.default
+  const icon = icons[status as keyof typeof icons] || icons.default
+
+  return (
+    <Badge className={`${variant} text-xs flex items-center`}>
+      {icon}
+      {status.replace('_', ' ').toUpperCase()}
+    </Badge>
+  )
 }
