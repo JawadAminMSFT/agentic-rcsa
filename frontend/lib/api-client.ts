@@ -133,7 +133,7 @@ export async function deleteRisk(riskId: string) {
   })
 }
 
-// Sample Submissions API calls
+// Past Submissions API calls
 export async function getSamples() {
   return fetchAPI("/samples")
 }

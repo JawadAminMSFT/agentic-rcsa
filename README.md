@@ -22,7 +22,7 @@ The accelerator provides a FastAPI backend, a modern React/Next.js frontend, and
 ### Backend (Python/FastAPI)
 - **agentic_rcsa.py**: Core orchestration logic, agent definitions, and workflow context management.
 - **api.py**: FastAPI server exposing REST endpoints for workflow orchestration, feedback, and CRUD operations.
-- **data/**: JSON catalogs for risks, controls, guardrails, and sample submissions.
+- **data/**: JSON catalogs for risks, controls, guardrails, and past submissions.
 - **output/**: Stores workflow context files (one per workflow instance).
 
 ### Frontend (React/Next.js)

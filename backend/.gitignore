@@ -33,9 +33,9 @@ Thumbs.db
 *.swp
 
 # Output and data
-output/
-uploads/
-conversations/
+output/*
+uploads/*
+conversations/*
 
 # Ignore compiled files
 *.pkl

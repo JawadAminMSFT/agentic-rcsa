@@ -259,9 +259,9 @@ mapping_agent = Agent[WorkflowContext](
     instructions=(
         "Given the project draft submission, identify and list key risks. "
         "ONLY return a JSON array of objects, each with: "
-        '{"risk": str, "category": str, "subrisk": str, "confidence": float}"'
+        '{"risk": str, "category_level_1": str, "category_level_2": str, "category_level_3": str, "confidence": float}'
         "Example: "
-        '[{"risk": "System outage", "category": "Operational Risk", "subrisk": "System outage", "confidence": 0.92}]'
+        '[{"risk": "System outage", "category_level_1": "Technology Risk", "category_level_2": "Unreliable Technology Systems, Solutions or Services", "category_level_3": "Failure in Technology Operations", "confidence": 0.92}]'
         "Do NOT return the draft submission, project description, or any other data. Do NOT echo the input. The output must be a JSON array of risk objects only."
     ),
     model=OpenAIChatCompletionsModel(

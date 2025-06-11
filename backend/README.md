@@ -22,7 +22,7 @@ It persistently records context and produces JSON outputs that can be consumed b
 intelligent-rcsa/
 │
 ├── agentic_rcsa.py          # Main orchestration and agents implementation
-├── data/                    # Data catalogs and sample submissions
+├── data/                    # Data catalogs and past submissions
 │   ├── risks.json           # Risk catalog definitions
 │   ├── controls.json        # Control catalog definitions
 │   ├── guardrails.json      # Guardrail rules for compliance checks

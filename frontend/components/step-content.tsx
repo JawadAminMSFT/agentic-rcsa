@@ -189,15 +189,30 @@ function RiskMappingContent({
               <CardContent className="p-4">
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium">{risk.risk}</h4>
-                    <Badge variant="outline" className="ml-2">
-                      Confidence: {(risk.confidence * 100).toFixed(0)}%
-                    </Badge>
+                    <h4 className="font-medium">{risk.risk || risk.risk_statement}</h4>
+                    {risk.confidence && (
+                      <Badge variant="outline" className="ml-2">
+                        Confidence: {(risk.confidence * 100).toFixed(0)}%
+                      </Badge>
+                    )}
                   </div>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    <Badge variant="secondary">{risk.category}</Badge>
-                    {risk.subrisk && <Badge variant="outline">{risk.subrisk}</Badge>}
+                    {(risk.category || risk.category_level_1) && (
+                      <Badge variant="secondary">{risk.category || risk.category_level_1}</Badge>
+                    )}
+                    {(risk.subrisk || risk.category_level_2) && (
+                      <Badge variant="outline">{risk.subrisk || risk.category_level_2}</Badge>
+                    )}
+                    {risk.category_level_3 && (
+                      <Badge variant="outline">{risk.category_level_3}</Badge>
+                    )}
+                    {risk.principal_risk_bucket && (
+                      <Badge variant="default">{risk.principal_risk_bucket}</Badge>
+                    )}
                   </div>
+                  {risk.risk_statement && risk.risk_statement !== risk.risk && (
+                    <p className="text-sm text-gray-600 mt-2">{risk.risk_statement}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
