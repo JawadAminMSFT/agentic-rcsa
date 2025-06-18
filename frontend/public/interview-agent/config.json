@@ -1,0 +1,36 @@
+{
+  "azureSpeech": {
+    "region": "swedencentral",
+    "apiKey": "YOUR_AZURE_SPEECH_API_KEY_HERE",
+    "enablePrivateEndpoint": false,
+    "privateEndpoint": ""
+  },
+  "azureOpenAI": {
+    "endpoint": "https://faris-sweden.openai.azure.com/",
+    "apiKey": "YOUR_AZURE_OPENAI_API_KEY_HERE",
+    "deploymentName": "gpt-4.1",
+    "systemPrompt": "You are a Risk and Controls expert that supports various teams from a company to create a risk and controls self-assessment. In order to do that, you have to go through a thorough discussion with the team you are working with to deeply understand the process they are trying to create a risk assessment for. Ask as much questions and follow-up questions as you need until you have a full understanding of the process being discussed. Only ask 1-2 questions at a time when have questions on the process. Only use alphabets, numbers and punctuation in your response. Don't use symbols or markdown in your communication, and don't use short forms or abbreviations. Once you understand the process end-to-end create a mermaid representation of the process and show it to the user using your createMermaidChart function. Do not use the word 'end' in your mermaid chart, as this breaks the chart syntax. Once you create the chart and show it to the user, ask them if they want to add any additional information to the chart. If they do, ask them what information they want to add and then update the chart accordingly. Feel free to ask further questions if a user adds more information to a chart.",
+    "enableOyd": false
+  },  "azureCognitiveSearch": {
+    "endpoint": "",
+    "apiKey": "",
+    "indexName": ""
+  },"speechConfig": {
+    "sttLocales": "en-US",
+    "ttsVoice": "en-US-AvaMultilingualNeural",
+    "customVoiceEndpointId": "",
+    "continuousConversation": true,
+    "initialSilenceTimeoutMs": 15000,
+    "endSilenceTimeoutMs": 1000,
+    "segmentationSilenceTimeoutMs": 2000
+  },
+  "avatarConfig": {
+    "character": "meg",
+    "style": "business",
+    "customized": false,
+    "useBuiltInVoice": false,
+    "autoReconnect": true,
+    "useLocalVideoForIdle": false,
+    "showSubtitles": true
+  }
+}

@@ -8,11 +8,12 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { createWorkflow } from "@/lib/workflow-actions"
-import { AlertCircle, FileText, Upload, X, Bot, MessageSquare } from "lucide-react"
+import { AlertCircle, FileText, Upload, X, Bot, MessageSquare, Video } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import ConversationalIntake from "@/components/conversational-intake"
+import InterviewAgent from "@/components/interview-agent"
 
 export default function NewWorkflowForm() {
   const router = useRouter()
@@ -51,7 +52,7 @@ export default function NewWorkflowForm() {
         {/* Tab Navigation */}
         <div className="mb-8">
           <Tabs value={tab} onValueChange={setTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-white/60 backdrop-blur-sm rounded-2xl p-1 border border-white/20">
+            <TabsList className="grid w-full grid-cols-3 bg-white/60 backdrop-blur-sm rounded-2xl p-1 border border-white/20">
               <TabsTrigger 
                 value="form" 
                 className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-xl py-3 px-6 font-medium transition-all"
@@ -65,6 +66,13 @@ export default function NewWorkflowForm() {
               >
                 <Bot className="w-4 h-4" />
                 AI Conversation
+              </TabsTrigger>
+              <TabsTrigger 
+                value="avatar" 
+                className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-lg rounded-xl py-3 px-6 font-medium transition-all"
+              >
+                <Video className="w-4 h-4" />
+                Interview Agent
               </TabsTrigger>
             </TabsList>
             
@@ -188,6 +196,10 @@ export default function NewWorkflowForm() {
             
             <TabsContent value="ai" className="mt-8">
               <ConversationalIntake />
+            </TabsContent>
+            
+            <TabsContent value="avatar" className="mt-8">
+              <InterviewAgent />
             </TabsContent>
           </Tabs>
         </div>
