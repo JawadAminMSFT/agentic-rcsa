@@ -1,3 +1,4 @@
 backend/environment.yml
 backend.zip
 frontend.zip
+.env
