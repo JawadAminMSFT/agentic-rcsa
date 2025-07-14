@@ -11,6 +11,9 @@ import { submitFeedback } from "@/lib/workflow-actions"
 import { getWorkflow } from "@/lib/api-client"
 import StepContent from "@/components/step-content"
 import WorkflowProgress from "@/components/workflow-progress"
+import AgentStatusDisplay from "@/components/agent-status-display"
+import AgentTransition from "@/components/agent-transition"
+import { useAgentStatus } from "@/hooks/use-agent-status"
 
 interface WorkflowStepsProps {
   workflowContext: WorkflowContext
@@ -92,6 +95,45 @@ export default function WorkflowSteps({ workflowContext: initialContext, workflo
   const steps = workflowContext.ui_updates || []
   const currentStep = workflowContext.current_step || (steps.length > 0 ? steps[steps.length - 1].step : null)
 
+  // Determine which agent should be shown as working
+  // If current_step already has output, the agent is working on the next step
+  const hasCurrentStepOutput = currentStep ? steps.some(step => step.step === currentStep) : false
+  
+  // Define the workflow step order
+  const workflowStepOrder = [
+    "generate_draft",
+    "map_risks", 
+    "map_controls",
+    "generate_mitigations",
+    "flag_issues",
+    "evaluate_decision"
+  ];
+  
+  // Determine which step agent is actually working on
+  let agentWorkingStep: string | null = null;
+  
+  if (currentStep && hasCurrentStepOutput) {
+    // Current step is complete, agent is working on next step
+    const currentIndex = workflowStepOrder.indexOf(currentStep);
+    if (currentIndex >= 0 && currentIndex < workflowStepOrder.length - 1) {
+      agentWorkingStep = workflowStepOrder[currentIndex + 1];
+    }
+  } else if (currentStep && !hasCurrentStepOutput) {
+    // Current step doesn't have output yet, agent is working on current step
+    agentWorkingStep = currentStep;
+  }
+  
+  // Show agent status when there's a working step and workflow is active
+  const shouldShowAgentStatus = agentWorkingStep && 
+    workflowContext.status !== "awaiting_feedback"
+  
+  // Use agent status hook to show progress messages
+  const agentStatus = useAgentStatus(
+    shouldShowAgentStatus ? agentWorkingStep : null,
+    false, // Always cycle through messages for better UX
+    workflowContext.status
+  )
+
   // Automatically expand the current step if awaiting feedback
   useEffect(() => {
     if (workflowContext.status === "awaiting_feedback" && currentStep) {
@@ -135,6 +177,9 @@ export default function WorkflowSteps({ workflowContext: initialContext, workflo
           </Alert>
         )}
 
+        {/* Agent Status Display */}
+        <AgentStatusDisplay agentStatus={agentStatus} />
+
         <Accordion
           type="single"
           collapsible
@@ -143,22 +188,23 @@ export default function WorkflowSteps({ workflowContext: initialContext, workflo
           className="space-y-4"
         >
           {steps.map((update, index) => (
-            <AccordionItem
-              key={`${update.step}-${index}`}
-              value={update.step}
-              className="border rounded-lg overflow-hidden"
-            >
-              <AccordionTrigger className="px-4 py-2 hover:bg-muted/50">
-                <div className="flex items-center justify-between w-full">
-                  <span className="font-medium">{formatStepName(update.step)}</span>
-                  {workflowContext.status === "awaiting_feedback" && update.step === currentStep && (
-                    <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-                      Feedback Needed
-                    </span>
-                  )}
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="p-4 pt-2">
+            <div key={`step-container-${update.step}-${index}`}>
+              <AccordionItem
+                key={`${update.step}-${index}`}
+                value={update.step}
+                className="border rounded-lg overflow-hidden"
+              >
+                <AccordionTrigger className="px-4 py-2 hover:bg-muted/50">
+                  <div className="flex items-center justify-between w-full">
+                    <span className="font-medium">{formatStepName(update.step)}</span>
+                    {workflowContext.status === "awaiting_feedback" && update.step === currentStep && (
+                      <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                        Feedback Needed
+                      </span>
+                    )}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="p-4 pt-2">
                 <StepContent step={update.step} data={update.output} />
 
                 {!update.step.startsWith("guard_") && (
@@ -201,6 +247,15 @@ export default function WorkflowSteps({ workflowContext: initialContext, workflo
                 )}
               </AccordionContent>
             </AccordionItem>
+            
+            {/* Show transition to next step if there is one */}
+            {index < steps.length - 1 && (
+              <AgentTransition 
+                fromStep={update.step}
+                toStep={steps[index + 1].step}
+              />
+            )}
+            </div>
           ))}
         </Accordion>
       </div>
