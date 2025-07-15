@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle, RefreshCw } from "lucide-react"
+import { AlertCircle, RefreshCw, CheckCircle } from "lucide-react"
 import type { WorkflowContext } from "@/lib/types"
 import { submitFeedback } from "@/lib/workflow-actions"
 import { getWorkflow } from "@/lib/api-client"
@@ -142,31 +142,76 @@ export default function WorkflowSteps({ workflowContext: initialContext, workflo
   }, [workflowContext.status, currentStep])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      <div className="md:col-span-1">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium">Workflow Progress</h3>
-          {isPolling && (
-            <div className="flex items-center text-xs text-muted-foreground">
-              <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-              Auto-updating
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {/* Enhanced Progress Sidebar */}
+      <div className="lg:col-span-1">
+        <div className="sticky top-6">
+          {/* Progress Header */}
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Progress</h3>
+              {isPolling && (
+                <div className="flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                  <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+                  Live updates
+                </div>
+              )}
             </div>
-          )}
+
+            {/* Workflow Status Badge */}
+            <div className="mb-4">
+              <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                workflowContext.status === 'completed' ? 'bg-green-100 text-green-800' :
+                workflowContext.status === 'awaiting_feedback' ? 'bg-amber-100 text-amber-800' :
+                'bg-blue-100 text-blue-800'
+              }`}>
+                {workflowContext.status === 'completed' ? '✓ Completed' :
+                 workflowContext.status === 'awaiting_feedback' ? '⏳ Awaiting Feedback' :
+                 '🔄 In Progress'}
+              </div>
+            </div>
+
+            <WorkflowProgress
+              steps={steps}
+              currentStep={currentStep}
+              workflowStatus={workflowContext.status}
+              onStepClick={(step) => setExpandedStep(step)}
+            />
+
+            {lastPollTime && (
+              <div className="text-xs text-muted-foreground mt-4 pt-4 border-t border-gray-100">
+                Last updated: {lastPollTime.toLocaleTimeString()}
+              </div>
+            )}
+          </div>
+
+          {/* Quick Stats */}
+          <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+            <h4 className="text-sm font-medium text-gray-700">Summary</h4>
+            <div className="space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Completed Steps:</span>
+                <span className="font-medium">{steps.length}/6</span>
+              </div>
+              {workflowContext.risk_mapping?.length > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Risks Identified:</span>
+                  <span className="font-medium">{workflowContext.risk_mapping.length}</span>
+                </div>
+              )}
+              {workflowContext.controls_mapping?.length > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Controls Mapped:</span>
+                  <span className="font-medium">{workflowContext.controls_mapping.length}</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-
-        <WorkflowProgress
-          steps={steps}
-          currentStep={currentStep}
-          workflowStatus={workflowContext.status}
-          onStepClick={(step) => setExpandedStep(step)}
-        />
-
-        {lastPollTime && (
-          <div className="text-xs text-muted-foreground mt-4">Last updated: {lastPollTime.toLocaleTimeString()}</div>
-        )}
       </div>
 
-      <div className="md:col-span-3">
+      {/* Main Content Area */}
+      <div className="lg:col-span-3">
         {workflowContext.status === "awaiting_feedback" && (
           <Alert className="mb-4 bg-amber-50 border-amber-200">
             <AlertCircle className="h-4 w-4 text-amber-500" />
@@ -185,64 +230,78 @@ export default function WorkflowSteps({ workflowContext: initialContext, workflo
           collapsible
           value={expandedStep || currentStep || undefined}
           onValueChange={setExpandedStep}
-          className="space-y-4"
+          className="space-y-6"
         >
           {steps.map((update, index) => (
             <div key={`step-container-${update.step}-${index}`}>
               <AccordionItem
                 key={`${update.step}-${index}`}
                 value={update.step}
-                className="border rounded-lg overflow-hidden"
+                className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="px-4 py-2 hover:bg-muted/50">
+                <AccordionTrigger className="px-6 py-4 hover:bg-gray-50/50 data-[state=open]:bg-gray-50">
                   <div className="flex items-center justify-between w-full">
-                    <span className="font-medium">{formatStepName(update.step)}</span>
+                    <div className="flex items-center space-x-3">
+                      <div className="flex-shrink-0">
+                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <CheckCircle className="h-5 w-5 text-green-600" />
+                        </div>
+                      </div>
+                      <span className="font-semibold text-gray-900">{formatStepName(update.step)}</span>
+                    </div>
                     {workflowContext.status === "awaiting_feedback" && update.step === currentStep && (
-                      <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+                      <span className="text-xs bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-medium">
                         Feedback Needed
                       </span>
                     )}
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="p-4 pt-2">
+                <AccordionContent className="px-6 py-4 bg-gray-50/30">
                 <StepContent step={update.step} data={update.output} />
 
                 {!update.step.startsWith("guard_") && (
-                  <div className="mt-6 space-y-3">
-                    <h4 className="text-sm font-medium">Feedback</h4>
-                    <Textarea
-                      placeholder="Provide feedback on this step..."
-                      value={feedback[update.step] || ""}
-                      onChange={(e) =>
-                        setFeedback({
-                          ...feedback,
-                          [update.step]: e.target.value,
-                        })
-                      }
-                      className="resize-none"
-                    />
+                  <div className="mt-8 bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="text-lg font-medium text-gray-900 mb-4">Provide Feedback</h4>
+                    <div className="space-y-4">
+                      <Textarea
+                        placeholder="Share your thoughts on this step..."
+                        value={feedback[update.step] || ""}
+                        onChange={(e) =>
+                          setFeedback({
+                            ...feedback,
+                            [update.step]: e.target.value,
+                          })
+                        }
+                        className="resize-none min-h-[100px] border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      />
 
-                    {error[update.step] && (
-                      <Alert variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>{error[update.step]}</AlertDescription>
-                      </Alert>
-                    )}
+                      {error[update.step] && (
+                        <Alert variant="destructive">
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>{error[update.step]}</AlertDescription>
+                        </Alert>
+                      )}
 
-                    <Button
-                      onClick={() => handleSubmitFeedback(update.step)}
-                      disabled={!feedback[update.step]?.trim() || submitting[update.step]}
-                      size="sm"
-                    >
-                      {submitting[update.step] ? "Submitting..." : "Submit Feedback"}
-                    </Button>
-
-                    {workflowContext.feedbacks?.[update.step] && (
-                      <div className="mt-4 p-3 bg-muted rounded-md">
-                        <h5 className="text-sm font-medium mb-1">Previous Feedback</h5>
-                        <p className="text-sm">{workflowContext.feedbacks[update.step]}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">
+                          Your feedback helps improve the workflow quality
+                        </span>
+                        <Button
+                          onClick={() => handleSubmitFeedback(update.step)}
+                          disabled={!feedback[update.step]?.trim() || submitting[update.step]}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+                        >
+                          {submitting[update.step] ? "Submitting..." : "Submit Feedback"}
+                        </Button>
                       </div>
-                    )}
+
+                      {workflowContext.feedbacks?.[update.step] && (
+                        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                          <h5 className="text-sm font-semibold text-blue-900 mb-2">Previous Feedback</h5>
+                          <p className="text-sm text-blue-800">{workflowContext.feedbacks[update.step]}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </AccordionContent>

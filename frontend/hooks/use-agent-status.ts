@@ -83,13 +83,18 @@ export function useAgentStatus(
         isWaitingForResponse: false
       });
 
+      console.log('Starting agent sequence for:', currentStep, 'Config:', agentConfig);
+
       // Function to cycle through working messages
       let messageIndex = 0;
       
       const showNextWorkingMessage = () => {
+        console.log('showNextWorkingMessage called, messageIndex:', messageIndex, 'currentStep:', currentStepRef.current, 'isStepComplete:', isStepComplete);
+        
         // Check if step is still active and not complete
         if (currentStepRef.current === currentStep && !isStepComplete) {
           if (messageIndex < agentConfig.working_messages.length) {
+            console.log('Setting message:', agentConfig.working_messages[messageIndex]);
             setAgentStatus(prev => ({
               ...prev,
               currentMessage: agentConfig.working_messages[messageIndex],
@@ -102,9 +107,11 @@ export function useAgentStatus(
             // If this is the last working message, don't schedule another one
             // Instead, wait for backend response
             if (messageIndex < agentConfig.working_messages.length) {
+              console.log('Scheduling next message in', agentConfig.message_delay_ms, 'ms');
               timeoutRef.current = setTimeout(showNextWorkingMessage, agentConfig.message_delay_ms);
             } else {
               // Show waiting state after all working messages
+              console.log('All messages shown, showing completion state');
               timeoutRef.current = setTimeout(() => {
                 if (currentStepRef.current === currentStep && !isStepComplete) {
                   setAgentStatus(prev => ({
@@ -116,10 +123,13 @@ export function useAgentStatus(
               }, agentConfig.message_delay_ms);
             }
           }
+        } else {
+          console.log('Stopping message sequence - step changed or completed');
         }
       };
 
       // Start showing working messages after initial delay
+      console.log('Scheduling first working message in', agentConfig.message_delay_ms, 'ms');
       timeoutRef.current = setTimeout(showNextWorkingMessage, agentConfig.message_delay_ms);
     }
 

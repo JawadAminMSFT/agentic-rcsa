@@ -57,25 +57,38 @@ export default function WorkflowDetailPage() {
   }
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
       <div className="container mx-auto max-w-7xl">
-        <WorkflowHeader
-          id={id}
-          title={workflowContext.draft_submission?.project_title || "Untitled Project"}
-          description={workflowContext.project_description}
-          status={displayStatus}
-        />
-        
-        {/* Edit button with modern styling */}
-        <div className="mb-8 flex justify-end">
-          <Link href={`/workflows/${id}/edit`}>
-            <Button className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 px-6 py-2 rounded-xl">
-              Edit Workflow
-            </Button>
-          </Link>
+        {/* Header with better spacing and background */}
+        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+          <div className="px-6 py-8">
+            <WorkflowHeader
+              id={id}
+              title={workflowContext.draft_submission?.project_title || "Untitled Project"}
+              description={workflowContext.project_description}
+              status={displayStatus}
+            />
+            
+            {/* Action buttons integrated into header */}
+            <div className="mt-6 flex justify-between items-center">
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <span>Workflow ID: {id}</span>
+                <span>•</span>
+                <span>Created: {new Date(workflowContext.createdAt || Date.now()).toLocaleDateString()}</span>
+              </div>
+              <Link href={`/workflows/${id}/edit`}>
+                <Button variant="outline" className="hover:bg-gray-50 border-gray-200">
+                  Edit Workflow
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
         
-        <WorkflowSteps workflowContext={workflowContext} workflowId={id} />
+        {/* Main content with better spacing */}
+        <div className="px-6 py-8">
+          <WorkflowSteps workflowContext={workflowContext} workflowId={id} />
+        </div>
       </div>
     </div>
   )
